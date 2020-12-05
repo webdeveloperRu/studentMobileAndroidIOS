@@ -16,7 +16,7 @@ import
 from 'react-native-media-controls';
 
 const VideoPlayer = () => {
-    const video = require('');
+  const video = require('../assets/video/video.mov');
   const videoPlayer = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
