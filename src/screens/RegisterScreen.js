@@ -1,55 +1,121 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, Text, Image} from 'react-native';
+import { StyleSheet, View, Text,TouchableOpacity} from 'react-native';
 import { Container, Content, Button, Input, Item, Icon} from 'native-base';
-const RegisterScreen = (props) => {
-  const handleSubmitButton = () => {
-    props.navigation.replace('DrawerNavigationRoutes');
+
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {registerUser} from '../redux/actions/userActions';
+import {APIService} from '../service'
+class RegisterScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      name: "",
+      showPassword: true,
+    };
+    this.navigation = props.navigation
   }
-  return (
-    <Container >
-      <Content style={styles.container}>
-        <View style={styles.signUpLayout}>
-          <Text style={styles.questionText}>Already have a account?</Text>
-          <Button 
-            rounded 
-            info 
-            style={styles.logInButton}
-            onPress={() => props.navigation.navigate('LoginScreen')}
+  setShowPassword=()=>{
+    if(this.state.showPassword) {
+      this.setState({showPassword: false})
+    }
+    else {
+      this.setState({showPassword: true})
+    }
+  }
+  signUp =  () => {
+    let user = {
+      email: this.state.email,
+      name: this.state.name,
+      password: this.state.password
+    }
+    APIService.registerUser(user)
+      .then(res=>res.json())
+      .then(res=>{
+        this.props.registerUser(res)
+        this.navigation.navigate('LoginScreen');
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    // if (this.props.user != null) {
+    //   this.navigation.navigate('LoginScreen');
+    // }
+  }
+  render() {
+    return (
+      <Container >
+        <Content style={styles.container}>
+          <View style={styles.signUpLayout}>
+            <Text style={styles.questionText}>Already have a account?</Text>
+            <Button 
+              rounded 
+              info 
+              style={styles.logInButton}
+              onPress={() => this.navigation.navigate('LoginScreen')}
+              >
+              <Text style={styles.logInText}>Log In</Text>
+            </Button>
+          </View>
+          <View style={styles.descriptionLayout}>
+            <Text style={styles.welcomeText}>
+              Academy.app
+            </Text>
+            <Text style={styles.descriptionText}>
+              There will be no more. We have reduced the prices of hundereds of products for the whole year!
+            </Text>
+          </View>
+          <View style={styles.registerFormLayout}>
+            <Item regular style={styles.userNameInput}>
+              <Input 
+                placeholder='User Name' 
+                onChangeText={(name) => {
+                  this.setState({name: name});
+                }}
+                value={this.state.name}
+                
+              />
+            </Item>
+            <Item regular style={styles.emailInput}>
+              <Input
+                placeholder='Email' 
+                onChangeText={(email) => {
+                  this.setState({email: email});
+                }}
+                value={this.state.email}
+              />
+            </Item>
+            <Item regular style={styles.passwordInput}>
+              <Input  
+                placeholder='Password'
+                secureTextEntry={this.state.showPassword} 
+                onChangeText={(password) => {
+                  this.setState({password: password});
+                }}
+                value={this.state.password}
+              />
+               <TouchableOpacity 
+                  onPress={this.setShowPassword}                  
+                  >
+                  {!this.state.showPassword && <Icon type="FontAwesome" name="eye" style={{fontSize: 20, color: 'black'}}  />}
+                  {this.state.showPassword && <Icon type="FontAwesome" name="eye" style={{fontSize: 20, color: '#bbbbbb'}} />}
+                </TouchableOpacity>
+            </Item>
+            <Button 
+              info 
+              full 
+              style={styles.createAccountButton}
+              onPress={this.signUp}
             >
-            <Text style={styles.logInText}>Log In</Text>
-          </Button>
-        </View>
-        <View style={styles.descriptionLayout}>
-          <Text style={styles.welcomeText}>
-            Academy.app
-          </Text>
-          <Text style={styles.descriptionText}>
-            There will be no more. We have reduced the prices of hundereds of products for the whole year!
-          </Text>
-        </View>
-        <View style={styles.registerFormLayout}>
-          <Item regular style={styles.userNameInput}>
-            <Input placeholder='User Name' />
-          </Item>
-          <Item regular style={styles.emailInput}>
-            <Input placeholder='Email' />
-          </Item>
-          <Item regular style={styles.passwordInput}>
-            <Input  placeholder='Password' />
-            <Icon type="FontAwesome" name="eye" style={{fontSize: 20, color: '#bbbbbb'}} />
-          </Item>
-          <Button 
-            info 
-            full 
-            style={styles.createAccountButton}
-            onPress={handleSubmitButton}
-          >
-            <Text style={styles.createAccountText}>Create account</Text>
-          </Button>            
-        </View>
-      </Content>
-    </Container>
-  );
+              <Text style={styles.createAccountText}>Create account</Text>
+            </Button>            
+          </View>
+        </Content>
+      </Container>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -151,5 +217,15 @@ const styles = StyleSheet.create({
   },
 
 });
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
 
-export default RegisterScreen;
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({registerUser}, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterScreen);
+// export default RegisterScreen;

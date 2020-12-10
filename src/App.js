@@ -12,10 +12,13 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 // Import Screens
 import SplashScreen from './screens/SplashScreen';
-import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ViewLessonScreen from './screens/ViewLesson'
+import CourseScreen from './screens/drawerScreens/Course'
+import MyLibraryScreen from './screens/drawerScreens/MyLibrary'
+import SettingScreen from './screens/drawerScreens/SettingScreen'
 import DrawerNavigationRoutes from './screens/DrawerNavigationRoutes';
+import LoginScreen from './screens/LoginScreen'
 
 const Stack = createStackNavigator();
 
@@ -76,6 +79,58 @@ const App = () => {
               height: 40,
               backgroundColor: "#008fd6",
             },
+          }}
+        />
+        <Stack.Screen
+          name="CourseScreen"
+          component={CourseScreen}
+          
+          // Hiding header for Navigation Drawer
+          options={{
+            headerShown: true,
+            title: "",
+            headerStyle: {
+              height: 40,
+              backgroundColor: "#008fd6",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="SettingScreen"
+          component={SettingScreen}
+          
+          // Hiding header for Navigation Drawer
+          options={{
+            headerShown: true,
+            title: "",
+            headerStyle: {
+              height: 40,
+              backgroundColor: "#008fd6",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="MyLibraryScreen"
+          component={MyLibraryScreen}
+          
+          // Hiding header for Navigation Drawer
+          options={{
+            headerShown: true,
+            title: "",
+            headerStyle: {
+              height: 40,
+              backgroundColor: "#008fd6",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          
+          // Hiding header for Navigation Drawer
+          options={{
+            headerShown: false,
+            title: "",
           }}
         />
       </Stack.Navigator>

@@ -1,6 +1,10 @@
-import React from 'react';
+import React,{Component} from 'react';
 import { StyleSheet, Text, View, Image,TouchableOpacity} from 'react-native';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import {connect} from 'react-redux';
+import {APIService} from '../../service'
+import {bindActionCreators} from 'redux';
+import {registerProducts} from '../../redux/actions/libraryActions';
+import {setCurrentProduct} from '../../redux/actions/libraryActions'
 import {
   Container,
   Button, 
@@ -16,150 +20,84 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { ImageOverlay } from "../../components/image-overlay";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-const MyLibraryScreen = ({navigation}) => {
-  return (
-    <Container style={styles.container}>        
-        <ScrollView>
-           <Card style={styles.libraryCard}>
-              <CardItem cardBody>
-                <ImageOverlay
-                  source={require("../../assets/images/profile.jpg")} 
-                  style={styles.libraryCardBody}>
-                    <TouchableOpacity 
-                      style={styles.playButton}
-                      onPress={() => navigation.navigate('ViewLessonScreen')}
-                      >
-                      <Icon name="play-circle-outline" size={40} style={styles.playIcon} ></Icon>
-                    </TouchableOpacity>
-                </ImageOverlay>
-              </CardItem>
-            <CardItem>
-              <Body style={styles.libraryCardDescription}>
-                <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.libraryCardDescriptionButton}
-                >
-                  <Thumbnail source={require("../../assets/images/profile.jpg")} style={styles.libraryCardDescriptionThumbNail}/>
+class MyLibraryScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      productList: [],
+      isLoading: false,
+    };
+    this.navigation = props.navigation;
+    if(props.user.token != null) {
+      this.getMyProducts()
+    }
+    else{ 
+      this.navigation.navigate('LoginScreen')
+    }
+    // this.getMyProducts();
+  }
+  getMyProducts = () => {
+    APIService.getMyProducts(this.props.user.token)
+    .then(res=>res.json())
+      .then(res=>{
+        this.state.productList = res.data
+        this.props.registerProducts(this.state.productList)
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+  }
+  viewCategory=(product)=>{
+    this.props.setCurrentProduct(product)
+    this.navigation.navigate('CourseScreen')
+  }
+  render() {
+    let products = []
+    let productList = this.props.library.productList
+    for(let i = 0; i <productList.length; i++){
+      products.push(
+        <Card style={styles.libraryCard} key={i}>
+          <CardItem cardBody>
+            <ImageOverlay
+              source={require("../../assets/images/background3.jpg")} 
+              style={styles.libraryCardBody}>
+                <TouchableOpacity 
+                  style={styles.playButton}
+                  onPress={() => this.viewCategory(productList[i])}
+                  >
+                  <Icon name="play-circle-outline" size={40} style={styles.playIcon} ></Icon>
                 </TouchableOpacity>
-                <View style={styles.descriptionPart}>
-                  <Text style={styles.descriptionTitle}>
-                    Beautiful Animation Shows what It's like
-                  </Text>
-                  <Text style={styles.nationalGeoText}>
-                    National Geographic
-                  </Text>
-                </View>
-              </Body>
-            </CardItem>
-          </Card>
-
-          <Card style={styles.libraryCard}>
-              <CardItem cardBody>
-                <ImageOverlay
-                  source={require("../../assets/images/background1.jpg")} 
-                  style={styles.libraryCardBody}>
-                    <TouchableOpacity 
-                      style={styles.playButton}
-                      onPress={() => navigation.navigate('ViewLessonScreen')}
-                      >
-                      <Icon name="play-circle-outline" size={40} style={styles.playIcon} ></Icon>
-                    </TouchableOpacity>
-                </ImageOverlay>
-              </CardItem>
-            <CardItem>
-              <Body style={styles.libraryCardDescription}>
-                <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.libraryCardDescriptionButton}
-                >
-                  <Thumbnail source={require("../../assets/images/background1.jpg")} style={styles.libraryCardDescriptionThumbNail}/>
-                </TouchableOpacity>
-                <View style={styles.descriptionPart}>
-                  <Text style={styles.descriptionTitle}>
-                    Beautiful Animation Shows what It's like
-                  </Text>
-                  <Text style={styles.nationalGeoText}>
-                    National Geographic
-                  </Text>
-                </View>
-              </Body>
-            </CardItem>
-          </Card>
-
-          <Card style={styles.libraryCard}>
-              <CardItem cardBody>
-                <ImageOverlay
-                  source={require("../../assets/images/background2.jpg")} 
-                  style={styles.libraryCardBody}>
-                    <TouchableOpacity 
-                      style={styles.playButton}
-                      onPress={() => navigation.navigate('ViewLessonScreen')}
-                      >
-                      <Icon name="play-circle-outline" size={40} style={styles.playIcon} ></Icon>
-                    </TouchableOpacity>
-                </ImageOverlay>
-              </CardItem>
-            <CardItem>
-              <Body style={styles.libraryCardDescription}>
-                <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.libraryCardDescriptionButton}
-                >
-                  <Thumbnail source={require("../../assets/images/background2.jpg")} style={styles.libraryCardDescriptionThumbNail}/>
-                </TouchableOpacity>
-                <View style={styles.descriptionPart}>
-                  <Text style={styles.descriptionTitle}>
-                    Beautiful Animation Shows what It's like
-                  </Text>
-                  <Text style={styles.nationalGeoText}>
-                    National Geographic
-                  </Text>
-                </View>
-              </Body>
-            </CardItem>
-          </Card>
-
-          <Card style={styles.libraryCard}>
-              <CardItem cardBody>
-                <ImageOverlay
-                  source={require("../../assets/images/background3.jpg")} 
-                  style={styles.libraryCardBody}>
-                    <TouchableOpacity 
-                      style={styles.playButton}
-                      onPress={() => navigation.navigate('ViewLessonScreen')}
-                      >
-                      <Icon name="play-circle-outline" style={styles.playIcon} ></Icon>
-                    </TouchableOpacity>
-                </ImageOverlay>
-              </CardItem>
-            <CardItem>
-              <Body style={styles.libraryCardDescription}>
-                <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.libraryCardDescriptionButton}
-                >
-                  <Thumbnail source={require("../../assets/images/background3.jpg")} style={styles.libraryCardDescriptionThumbNail}/>
-                </TouchableOpacity>
-                <View style={styles.descriptionPart}>
-                  <Text style={styles.descriptionTitle}>
-                    Beautiful Animation Shows what It's like
-                  </Text>
-                  <Text style={styles.nationalGeoText}>
-                    National Geographic
-                  </Text>
-                </View>
-              </Body>
-            </CardItem>
-          </Card>
-
-          
-
-
-
-
-        </ScrollView>
-      </Container>
-  );
+            </ImageOverlay>
+          </CardItem>
+          <CardItem>
+            <Body style={styles.libraryCardDescription}>
+              <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.libraryCardDescriptionButton}
+              >
+                <Thumbnail source={require("../../assets/images/background3.jpg")} style={styles.libraryCardDescriptionThumbNail}/>
+              </TouchableOpacity>
+              <View style={styles.descriptionPart}>
+                <Text style={styles.descriptionTitle}>
+                  {productList[i].description.substring(0, 200)}...
+                </Text>
+                <Text style={styles.productTitle}>
+                  {productList[i].title}
+                </Text>
+              </View>
+            </Body>
+          </CardItem>
+        </Card>
+      )
+    }
+    return (
+      <Container style={styles.container}>        
+          <ScrollView>
+            {products}
+          </ScrollView>
+        </Container>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
@@ -181,7 +119,7 @@ const styles = StyleSheet.create({
   libraryCardDescription: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "center",
+    // alignItems: "center",
     borderTopColor: "black",
   },
   descriptionPart: {
@@ -191,8 +129,8 @@ const styles = StyleSheet.create({
   descriptionTitle: {
     fontSize: 16,
   },
-  nationalGeoText: {
-    fontSize: 12,
+  productTitle: {
+    fontSize: 18,
     color: "#999999"
   },
   libraryCardDescriptionButton: {
@@ -221,6 +159,17 @@ const styles = StyleSheet.create({
     fontSize: 50,
   }
 
-});
 
-export default MyLibraryScreen;
+});
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+    library: state.library
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({registerProducts,setCurrentProduct}, dispatch);
+};
+export default connect(mapStateToProps, mapDispatchToProps)(MyLibraryScreen);
+// export default MyLibraryScreen;

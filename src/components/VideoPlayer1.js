@@ -1,22 +1,17 @@
 // React Native Video Library to Play Video in Android and IOS
 // https://aboutreact.com/react-native-video/
 
-// import React in our code
 import React, {useState, useRef} from 'react';
 
-// import all the components we are going to use
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 
-//Import React Native Video to play video
 import Video from 'react-native-video';
 
-//Media Controls to control Play/Pause/Seek and full screen
-import
-  MediaControls, {PLAYER_STATES}
+import MediaControls, {PLAYER_STATES}
 from 'react-native-media-controls';
 
 const VideoPlayer = () => {
-  const video = require('../assets/video/video.mov');
+  // const video = require('../assets/video/video.mov');
   const videoPlayer = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -94,7 +89,10 @@ const VideoPlayer = () => {
         ref={videoPlayer}
         resizeMode={screenType}
         onFullScreen={isFullScreen}
-        source={video}
+        source={{
+          uri:
+            'https://assets.mixkit.co/videos/download/mixkit-countryside-meadow-4075.mp4',
+        }}
         style={styles.mediaPlayer}
         volume={10}
       />
@@ -135,6 +133,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
+    height: '100%',
     right: 0,
     backgroundColor: 'black',
     justifyContent: 'center',

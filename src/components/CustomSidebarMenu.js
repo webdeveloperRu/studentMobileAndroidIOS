@@ -18,7 +18,9 @@ import {
 
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import {store} from '../redux/store';
+import * as userActions from '../redux/actions/userActions';
+import * as libraryActions from '../redux/actions/libraryActions';
 const CustomSidebarMenu = (props) => {
   return (
     <View style={stylesSidebar.sideMenuContainer}>
@@ -64,6 +66,8 @@ const CustomSidebarMenu = (props) => {
                   text: 'Confirm',
                   onPress: () => {
                     AsyncStorage.clear();
+                    store.dispatch(libraryActions.clearAll());
+                    store.dispatch(userActions.logOut());
                     props.navigation.replace('Auth');
                   },
                 },

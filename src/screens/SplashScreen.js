@@ -37,7 +37,7 @@ const SplashScreen = ({navigation}) => {
         style={{width: '90%', resizeMode: 'contain', margin: 30}}
       /> */}
       <Text style={styles.logoTitle}>
-        Accademy
+        Academy
       </Text>
       <ActivityIndicator
         animating={animating}

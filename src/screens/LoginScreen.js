@@ -1,52 +1,106 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, Text} from 'react-native';
+import { StyleSheet, View, Text,TouchableOpacity} from 'react-native';
 import { Container, Content, Button, Input, Item, Icon} from 'native-base';
+import {APIService} from '../service'
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {loginUser} from '../redux/actions/userActions';
+class LoginScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      showPassword: true,
+    };
+    this.navigation = props.navigation;
+  }
+  logIn = () => {
+    let user ={
+      email: this.state.email,
+      password: this.state.password
+    }
 
-const LoginScreen = ({navigation}) => {
-  const handleSubmitPress = () => {
-    navigation.replace('DrawerNavigationRoutes');
+    APIService.loginUser(user)
+    .then(res=>res.json())
+    .then(res=>{
+      this.props.loginUser(res)
+      // console.log('login store user result', this.props.user)
+      this.navigation.replace('DrawerNavigationRoutes');
+    })
+    .catch(err=>{
+      console.log(err);
+    })
   };
-  return (
-    <Container >
-      <Content style={styles.container}>
-        <View style={styles.signUpLayout}>
-          <Text style={styles.questionText}>Don't have a account?</Text>
-          <Button 
-            rounded
-            info 
-            style={styles.signUpButton}
-            onPress={() => navigation.navigate('RegisterScreen')}
-            >
-            <Text style={styles.signUpText}>Sign Up</Text>
-          </Button>
-        </View>
-        <View style={styles.descriptionLayout}>
-          <Text style={styles.welcomeText}>
-            Welcome to the Academy.app
-          </Text>
-          <Text style={styles.descriptionText}>
-            Enter your email address and password to access your account
-          </Text>
-        </View>
-        <View style={styles.loginFormLayout}>
-          <Item regular style={styles.emailInput}>
-            <Input placeholder='Email' />
-          </Item>
-          <Item regular style={styles.passwordInput}>
-            <Input  placeholder='Password' />
-            <Icon type="FontAwesome" name="eye" style={{fontSize: 20, color: '#bbbbbb'}} />
-          </Item>
-          <Button 
-            info
-            full
-            style={styles.logInButton}
-            onPress={handleSubmitPress}>
-            <Text style={styles.logInText}>Log In</Text>
-          </Button>
-        </View>
-      </Content>
-    </Container>
-  );
+  setShowPassword=()=> {
+    if(this.state.showPassword) {
+      this.setState({showPassword: false})
+    }
+    else {
+      this.setState({showPassword: true})
+    }
+  }
+  render(){
+    return (
+      <Container >
+        <Content style={styles.container}>
+          <View style={styles.signUpLayout}>
+            <Text style={styles.questionText}>Don't have a account?</Text>
+            <Button 
+              rounded
+              info 
+              style={styles.signUpButton}
+              onPress={() => this.navigation.navigate('RegisterScreen')}
+              >
+              <Text style={styles.signUpText}>Sign Up</Text>
+            </Button>
+          </View>
+          <View style={styles.descriptionLayout}>
+            <Text style={styles.welcomeText}>
+              Welcome to the Academy.app
+            </Text>
+            <Text style={styles.descriptionText}>
+              Enter your email address and password to access your account
+            </Text>
+          </View>
+          <View style={styles.loginFormLayout}>
+            <Item regular style={styles.emailInput}>
+              <Input 
+                placeholder='Email' 
+                onChangeText={(email) => {
+                  this.setState({email: email});
+                }}
+                value={this.state.email}
+                />
+            </Item>
+            <Item regular style={styles.passwordInput}>
+              <Input  
+                placeholder='Password' 
+                secureTextEntry={this.state.showPassword} 
+                onChangeText={(password) => {
+                  this.setState({password: password});
+                }}
+                vlaue={this.state.password}
+                />
+                <TouchableOpacity 
+                  onPress={this.setShowPassword}                  
+                  >
+                  {!this.state.showPassword && <Icon type="FontAwesome" name="eye" style={{fontSize: 20, color: 'black'}}  />}
+                  {this.state.showPassword && <Icon type="FontAwesome" name="eye" style={{fontSize: 20, color: '#bbbbbb'}} />}
+                </TouchableOpacity>
+            </Item>
+            <Button 
+              info
+              full
+              style={styles.logInButton}
+              onPress={this.logIn}>
+              <Text style={styles.logInText}>Log In</Text>
+            </Button>
+          </View>
+        </Content>
+      </Container>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -120,5 +174,14 @@ const styles = StyleSheet.create({
   },
 
 });
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
 
-export default LoginScreen;
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({loginUser}, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
