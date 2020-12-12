@@ -20,6 +20,7 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { ImageOverlay } from "../../components/image-overlay";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Spinner from 'react-native-loading-spinner-overlay';
 class MyLibraryScreen extends Component {
   constructor(props) {
     super(props);
@@ -28,18 +29,23 @@ class MyLibraryScreen extends Component {
       isLoading: false,
     };
     this.navigation = props.navigation;
-    if(props.user.token != null) {
+    
+  }
+  componentDidMount() {
+    if(this.props.user.token != null) {
       this.getMyProducts()
     }
     else{ 
       this.navigation.navigate('LoginScreen')
     }
-    // this.getMyProducts();
   }
   getMyProducts = () => {
+    this.setState({isLoading: true})
     APIService.getMyProducts(this.props.user.token)
     .then(res=>res.json())
       .then(res=>{
+        this.setState({isLoading: false})
+        console.log('proudct list', res.data)
         this.state.productList = res.data
         this.props.registerProducts(this.state.productList)
       })
@@ -57,25 +63,25 @@ class MyLibraryScreen extends Component {
     for(let i = 0; i <productList.length; i++){
       products.push(
         <Card style={styles.libraryCard} key={i}>
-          <CardItem cardBody>
-            <ImageOverlay
-              source={require("../../assets/images/background3.jpg")} 
-              style={styles.libraryCardBody}>
-                <TouchableOpacity 
-                  style={styles.playButton}
-                  onPress={() => this.viewCategory(productList[i])}
-                  >
-                  <Icon name="play-circle-outline" size={40} style={styles.playIcon} ></Icon>
-                </TouchableOpacity>
-            </ImageOverlay>
+           <TouchableOpacity 
+              onPress={() => this.viewCategory(productList[i])}
+              >
+            <CardItem cardBody>
+              <ImageOverlay
+                source={{uri:productList[i].thumbnail}} 
+                // source={require("../../assets/images/background1.jpg")} 
+                style={styles.libraryCardBody}>
+                    <Icon name="play-circle-outline" size={40} style={styles.playIcon}  ></Icon>
+              </ImageOverlay>
           </CardItem>
+          </TouchableOpacity>
           <CardItem>
             <Body style={styles.libraryCardDescription}>
               <TouchableOpacity
               activeOpacity={0.7}
               style={styles.libraryCardDescriptionButton}
               >
-                <Thumbnail source={require("../../assets/images/background3.jpg")} style={styles.libraryCardDescriptionThumbNail}/>
+                <Thumbnail source={{uri:productList[i].instructor.headshot}} style={styles.libraryCardInstructorThumbnail}/>
               </TouchableOpacity>
               <View style={styles.descriptionPart}>
                 <Text style={styles.descriptionTitle}>
@@ -92,9 +98,14 @@ class MyLibraryScreen extends Component {
     }
     return (
       <Container style={styles.container}>        
-          <ScrollView>
-            {products}
-          </ScrollView>
+        <Spinner
+            visible={this.state.isLoading}
+            textContent={'Loading...'}
+            textStyle={styles.spinnerTextStyle}
+          />
+            <ScrollView >           
+              {products}
+            </ScrollView>
         </Container>
     );
   }
@@ -136,7 +147,7 @@ const styles = StyleSheet.create({
   libraryCardDescriptionButton: {
     marginRight: 10,
   },
-  libraryCardDescriptionThumbNail: {
+  libraryCardInstructorThumbnail: {
     width: 45,
     height: 45,
   },
@@ -145,6 +156,7 @@ const styles = StyleSheet.create({
     width: null, 
     flex: 1,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
   },
   playButton: {
@@ -157,7 +169,10 @@ const styles = StyleSheet.create({
   playIcon: {
     color: "white",
     fontSize: 50,
-  }
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
+  },
 
 
 });

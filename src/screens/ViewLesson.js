@@ -15,9 +15,9 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { Rating} from 'react-native-ratings';
 import VideoPlayer from '../components/VideoPlayer1'
+// import Video from 'react-native-af-video-player'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
-
 class ViewLessonScreen extends Component{
   constructor(props) {
     super(props);
@@ -26,128 +26,107 @@ class ViewLessonScreen extends Component{
     };
     this.navigation = props.navigation;
   }
+  componentDidMount() {
+    this.setFullScreen();
+    console.log('comments data',this.props.library.comments)
+  }
+  setFullScreen(){
+    if(this.props.library.fullscreen){
+      this.navigation.setOptions({headerShown: false});
+    }
+    else {
+      this.navigation.setOptions({headerShown: true});
+    }
+  }
   render() {
+     let comments =[];
+     let commentsData = this.props.library.comments;
+     this.setFullScreen()
+    //  if(commentsData != []) {
+    //   for (let i = 0; i < commentsData.length; i++) {
+    //     comments.push(
+    //       <ListItem avatar key={commentsData[i].id}>
+    //         <Left>
+    //         <Thumbnail source={require("../assets/images/avatar.png")}  />
+    //         </Left>
+    //         <Body>
+    //           <Text style={styles.reviewerText}>{commentsData[i].author_name}</Text>
+    //           <Rating
+    //             ratingCount={5}
+    //             imageSize={15}
+    //             readonly={true}
+    //             type='custom'
+    //             tintColor='#fff'
+    //             ratingColor='#5f5f5f'
+    //             ratingBackgroundColor='#c8c7c8'
+    //             style={styles.starRating}
+    //           />
+    //           <Text style={styles.reviewText}>{commentsData[i].comment}</Text>
+    //         </Body>
+    //         <Right>
+    //           <TouchableOpacity >
+    //             <Icon name='reply' size={30} color="grey" />
+    //           </TouchableOpacity>
+    //         </Right>
+    //       </ListItem>  
+    //     )
+    //   }
+    // }
+    
     return (
       <Container style={styles.container}>
-        <ScrollView>
-          <Header style={styles.headerLayout}>
-            <Body>
-              <Title>Electric Guitar</Title>
-            </Body>
-          </Header>        
-          <View style={styles.videoPlayerLayout}>
-            <View style={{paddingVertical: "15%", backgroundColor:"#f2f2f2", height:350}}>
-              <VideoPlayer />
-            </View>
-            <View style={styles.descriptionLayout}>
-              <Text style={styles.descriptionTitle}>
-                {this.props.library.currentLesson.title}
-              </Text>
-              <Text style={styles.descrptionContent}>
-                {this.props.library.currentLesson.body.substring(0,200)}
-              </Text>
-              <Button full style={styles.markDownButton}>
-                <Text style={styles.markDownTitle}>Mark as Done</Text>
-              </Button>
-            </View>            
+          { !this.props.library.fullscreen &&
+            <Header style={styles.headerLayout}>
+              <Body>
+                <Title>Electric Guitar</Title>
+              </Body>
+            </Header>
+          }
+          <View style={[this.props.library.fullscreen? styles.fullScreenView:styles.normalScreenView]}>
+            <VideoPlayer />
           </View>
-          <View style={styles.downloadsLayout}>          
-            <List>
-              <ListItem style={styles.downloadLayout}>
-                <Body>
-                  <Text style={styles.downloadText}>Downloads</Text>
-                </Body>
-                <Right>
+          {!this.props.library.fullscreen && 
+              <ScrollView>
+              <View style={styles.videoPlayerLayout}>
+                <View style={styles.descriptionLayout}>
+                  <Text style={styles.descriptionTitle}>
+                    {this.props.library.currentLesson.title}
+                  </Text>
+                  <Text style={styles.descrptionContent}>
+                    {this.props.library.currentLesson.body.substring(0,200)}
+                  </Text>
+                  <Button full style={styles.markDownButton}>
+                    <Text style={styles.markDownTitle}>Mark as Done</Text>
+                  </Button>
+                </View>            
+              </View>
+              <View style={styles.downloadsLayout}>          
+                <List>
+                  <ListItem style={styles.downloadLayout}>
+                    <Body>
+                      <Text style={styles.downloadText}>Downloads</Text>
+                    </Body>
+                    <Right>
+                      <TouchableOpacity >
+                        <Icon name='file-download' size={30} color="grey" />
+                      </TouchableOpacity>
+                    </Right>
+                  </ListItem>
+                </List>
+              </View>
+              <View style={styles.reviewsLayout}>
+                <View style={styles.reviewTitleLayout}>
+                  <Text style={styles.reviewTitle}>Reviews</Text>
                   <TouchableOpacity >
-                    <Icon name='file-download' size={30} color="grey" />
+                    <Icon style={styles.reivewButton} name='keyboard-arrow-down' size={40} color="grey" />
                   </TouchableOpacity>
-                </Right>
-              </ListItem>
-            </List>
-          </View>
-          <View style={styles.reviewsLayout}>
-            <View style={styles.reviewTitleLayout}>
-              <Text style={styles.reviewTitle}>Reviews</Text>
-              <TouchableOpacity >
-                <Icon style={styles.reivewButton} name='keyboard-arrow-down' size={40} color="grey" />
-              </TouchableOpacity>
-            </View>
-            <List>
-              <ListItem avatar>
-                <Left>
-                <Thumbnail source={require("../assets/images/avatar.png")}  />
-                </Left>
-                <Body>
-                  <Text style={styles.reviewerText}>Kumar Pratik</Text>
-                  <Rating
-                    ratingCount={5}
-                    imageSize={15}
-                    readonly={true}
-                    type='custom'
-                    tintColor='#fff'
-                    ratingColor='#5f5f5f'
-                    ratingBackgroundColor='#c8c7c8'
-                    style={styles.starRating}
-                  />
-                  <Text style={styles.reviewText}>Just keep them coming! I love this series of books from Mia Madison. I really hope that it continues with a book about Beverly and Dazzle.</Text>
-                </Body>
-                <Right>
-                  <TouchableOpacity >
-                    <Icon name='reply' size={30} color="grey" />
-                  </TouchableOpacity>
-                </Right>
-              </ListItem>
-              <ListItem avatar>
-                <Left>
-                <Thumbnail source={require("../assets/images/avatar.png")}  />
-                </Left>
-                <Body>
-                  <Text style={styles.reviewerText}>Kumar Pratik</Text>
-                  <Rating
-                    ratingCount={5}
-                    imageSize={15}
-                    readonly={true}
-                    type='custom'
-                    tintColor='#fff'
-                    ratingColor='#5f5f5f'
-                    ratingBackgroundColor='#c8c7c8'
-                    style={styles.starRating}
-                  />
-                  <Text style={styles.reviewText}>Just keep them coming! I love this series of books from Mia Madison. I really hope that it continues with a book about Beverly and Dazzle.</Text>
-                </Body>
-                <Right>
-                  <TouchableOpacity >
-                    <Icon name='reply' size={30} color="grey" />
-                  </TouchableOpacity>
-                </Right>
-              </ListItem>
-              <ListItem avatar>
-                <Left>
-                <Thumbnail source={require("../assets/images/avatar.png")}  />
-                </Left>
-                <Body>
-                  <Text style={styles.reviewerText}>Kumar Pratik</Text>
-                  <Rating
-                    ratingCount={5}
-                    imageSize={15}
-                    readonly={true}
-                    type='custom'
-                    tintColor='#fff'
-                    ratingColor='#5f5f5f'
-                    ratingBackgroundColor='#c8c7c8'
-                    style={styles.starRating}
-                  />
-                  <Text style={styles.reviewText}>Just keep them coming! I love this series of books from Mia Madison. I really hope that it continues with a book about Beverly and Dazzle.</Text>
-                </Body>
-                <Right>
-                  <TouchableOpacity >
-                    <Icon name='reply' size={30} color="grey" />
-                  </TouchableOpacity>
-                </Right>
-              </ListItem>
-            </List>
-          </View>
-        </ScrollView>
+                </View>
+                <List>
+                  {comments}
+                </List>
+              </View>
+            </ScrollView>
+          }
     </Container>
     );
   }
@@ -243,6 +222,14 @@ const styles = StyleSheet.create({
   reivewButton: {
     flex:1,
     marginRight:10
+  },
+  fullScreenView:{
+    flex:1,
+  },
+  normalScreenView: {
+    marginVertical: 20, 
+    backgroundColor:"#f2f2f2", 
+    height: 250
   }
 
 });

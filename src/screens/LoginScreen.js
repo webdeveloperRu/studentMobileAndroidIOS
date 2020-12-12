@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, Text,TouchableOpacity} from 'react-native';
-import { Container, Content, Button, Input, Item, Icon} from 'native-base';
+import { Container, Content, Button, Input, Item, Icon, Toast} from 'native-base';
 import {APIService} from '../service'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {loginUser} from '../redux/actions/userActions';
+import * as Progress from 'react-native-progress';
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +13,9 @@ class LoginScreen extends Component {
       email: "",
       password: "",
       showPassword: true,
+      showToast: false,
+      errorMessage: "",
+      logging: false,
     };
     this.navigation = props.navigation;
   }
@@ -20,16 +24,27 @@ class LoginScreen extends Component {
       email: this.state.email,
       password: this.state.password
     }
-
+    this.setState({logging: true})
     APIService.loginUser(user)
     .then(res=>res.json())
     .then(res=>{
-      this.props.loginUser(res)
-      // console.log('login store user result', this.props.user)
-      this.navigation.replace('DrawerNavigationRoutes');
+      this.setState({logging: false})
+      if (res.success == true) {
+        this.props.loginUser(res)
+        this.navigation.replace('DrawerNavigationRoutes');
+      }
+      else {
+        Toast.show({
+          text: res.message,
+          style: {
+            backgroundColor: "#ff5500"
+           }
+        })
+      } 
     })
     .catch(err=>{
-      console.log(err);
+      this.setState({logging: false})
+      console.log(err)
     })
   };
   setShowPassword=()=> {
@@ -94,10 +109,12 @@ class LoginScreen extends Component {
               full
               style={styles.logInButton}
               onPress={this.logIn}>
-              <Text style={styles.logInText}>Log In</Text>
+              {this.state.logging && <Progress.Circle  size={30} indeterminate={true} thickness={3} color={"white"}/>}
+              {!this.state.logging && <Text style={styles.logInText}>Log In</Text>}              
             </Button>
-          </View>
+          </View>        
         </Content>
+        
       </Container>
     );
   }

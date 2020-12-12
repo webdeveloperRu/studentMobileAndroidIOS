@@ -42,6 +42,19 @@ export const setCurrentLesson = (lesson) => {
     payload: lesson,
   };
 };
+export const registerComments = (comments) => {
+  return {
+    type: ActionTypes.REGISTER_COMMENTS,
+    payload: comments,
+  };
+};
+export const setFullScreen = (fullscreen) => {
+  return {
+    type: ActionTypes.SET_FULLSCREEN,
+    payload: fullscreen,
+  };
+};
+
 export const clearAll = () => {
   return {
     type: ActionTypes.CLEAR_ALL,

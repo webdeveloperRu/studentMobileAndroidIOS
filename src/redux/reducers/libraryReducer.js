@@ -8,6 +8,8 @@ const initialState = {
   currentLesson: [],
   currentCategory: [],
   totalLessons: 0,
+  comments: [],
+  fullscreen: false,
 };
 
 export const libraryReducer = (state = initialState, action) => {
@@ -53,12 +55,18 @@ export const libraryReducer = (state = initialState, action) => {
           ...state,
           currentLesson: currentLesson,
         };
-  case ActionTypes.SET_CURRENT_CATEGORY:
-    const currentCategory = action.payload;
-      return {
-        ...state,
-        currentCategory: currentCategory,
-      };    
+    case ActionTypes.REGISTER_COMMENTS:
+      const comments = action.payload;
+        return {
+          ...state,
+          comments: comments,
+        };    
+    case ActionTypes.SET_FULLSCREEN:
+      const fullscreen = action.payload;
+        return {
+          ...state,
+          fullscreen: fullscreen,
+        };    
     case ActionTypes.CLEAR_ALL:
       return {
         ...state,
@@ -68,7 +76,9 @@ export const libraryReducer = (state = initialState, action) => {
         currentProduct: [],
         currentLesson: [],
         currentCategory: [],
+        comments: [],
         totalLessons: 0,
+        fullscreen: false
       };
 
     default:

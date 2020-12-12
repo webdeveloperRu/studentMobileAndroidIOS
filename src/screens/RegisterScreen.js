@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, Text,TouchableOpacity} from 'react-native';
-import { Container, Content, Button, Input, Item, Icon} from 'native-base';
+import { Container, Content, Button, Input, Item, Icon, Toast} from 'native-base';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {registerUser} from '../redux/actions/userActions';
 import {APIService} from '../service'
+import * as Progress from 'react-native-progress';
 class RegisterScreen extends Component {
   constructor(props) {
     super(props);
@@ -14,6 +15,7 @@ class RegisterScreen extends Component {
       password: "",
       name: "",
       showPassword: true,
+      registering: false,
     };
     this.navigation = props.navigation
   }
@@ -31,13 +33,31 @@ class RegisterScreen extends Component {
       name: this.state.name,
       password: this.state.password
     }
+    this.setState({registering: true})
     APIService.registerUser(user)
       .then(res=>res.json())
       .then(res=>{
-        this.props.registerUser(res)
-        this.navigation.navigate('LoginScreen');
+        this.setState({registering:false})
+        if( res.email == ""){
+          Toast.show({
+            text: res.message,
+            style: {
+              backgroundColor: "#ff5500"
+             }
+          })
+        }
+        else {
+          this.props.registerUser(res)          
+          this.navigation.navigate('LoginScreen');
+          Toast.show({
+            text: 'User register success!',
+            type: 'success'
+          })
+          
+        }
       })
       .catch(err=>{
+        this.setState({registering:false})
         console.log(err);
       })
     // if (this.props.user != null) {
@@ -109,7 +129,8 @@ class RegisterScreen extends Component {
               style={styles.createAccountButton}
               onPress={this.signUp}
             >
-              <Text style={styles.createAccountText}>Create account</Text>
+              {this.state.registering && <Progress.Circle  size={30} indeterminate={true} thickness={3} color={"white"}/>}
+              {!this.state.registering && <Text style={styles.createAccountText}>Create account</Text>}
             </Button>            
           </View>
         </Content>

@@ -6,11 +6,14 @@ import React, {useState, useRef} from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 
 import Video from 'react-native-video';
+import {setFullScreen} from '../redux/actions/libraryActions';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
 import MediaControls, {PLAYER_STATES}
 from 'react-native-media-controls';
 
-const VideoPlayer = () => {
+const VideoPlayer = (props) => {
   // const video = require('../assets/video/video.mov');
   const videoPlayer = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -21,7 +24,7 @@ const VideoPlayer = () => {
   const [
     playerState, setPlayerState
   ] = useState(PLAYER_STATES.PLAYING);
-  const [screenType, setScreenType] = useState('content');
+  const [screenType, setScreenType] = useState('cover');
 
   const onSeek = (seek) => {
     //Handler for change in seekbar
@@ -65,9 +68,11 @@ const VideoPlayer = () => {
   const enterFullScreen = () => {};
 
   const onFullScreen = () => {
-    setIsFullScreen(isFullScreen);
-    if (screenType == 'content') setScreenType('cover');
-    else setScreenType('content');
+    setIsFullScreen(!isFullScreen);
+    props.setFullScreen(isFullScreen)
+    if (isFullScreen == false) setScreenType('content');
+    else setScreenType('cover');
+    console.log('full screen state', isFullScreen)
   };
 
   const renderToolbar = () => (
@@ -89,10 +94,7 @@ const VideoPlayer = () => {
         ref={videoPlayer}
         resizeMode={screenType}
         onFullScreen={isFullScreen}
-        source={{
-          uri:
-            'https://assets.mixkit.co/videos/download/mixkit-countryside-meadow-4075.mp4',
-        }}
+        source={require('../assets/video/video.mp4')} 
         style={styles.mediaPlayer}
         volume={10}
       />
@@ -112,8 +114,12 @@ const VideoPlayer = () => {
     </View>
   );
 };
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({setFullScreen}, dispatch);  
+};
+export default connect(null,mapDispatchToProps)(VideoPlayer);
 
-export default VideoPlayer;
+// export default VideoPlayer;
 
 const styles = StyleSheet.create({
   container: {

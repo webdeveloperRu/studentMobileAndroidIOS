@@ -59,3 +59,13 @@ export const getLessons = async (category_id, token) => {
     },
   })
 };
+
+export const getComments = async (lesson_id, token) => {
+  return fetch(API_URL+'student/'+lesson_id+'/comments?demo', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': token
+    },
+  })
+};

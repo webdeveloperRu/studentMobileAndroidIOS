@@ -10,6 +10,14 @@ target 'StudentVideoApp' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'react-native-video', :path => '../node_modules/react-native-video'
+
+  pod 'react-native-keep-awake', :path => '../node_modules/react-native-keep-awake'
+
+  pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
+
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   target 'StudentVideoAppTests' do
     inherit! :complete
     # Pods for testing

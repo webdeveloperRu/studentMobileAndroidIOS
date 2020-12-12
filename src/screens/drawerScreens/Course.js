@@ -25,6 +25,7 @@ import {registerLessons} from '../../redux/actions/libraryActions';
 import {registerTotalLessons} from '../../redux/actions/libraryActions';
 import {setCurrentCategory} from '../../redux/actions/libraryActions';
 import {setCurrentLesson} from '../../redux/actions/libraryActions';
+import {registerComments} from '../../redux/actions/libraryActions';
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 import { Bullets  }from "react-native-easy-content-loader"
 import * as Progress from 'react-native-progress';
@@ -39,12 +40,15 @@ import * as Progress from 'react-native-progress';
         progress: 0,
       };
       this.navigation = props.navigation;
-      if(props.user.token != null) {
-        this.getCategories(props.library.currentProduct.id, props.user.token)
+    }
+    componentDidMount() {
+      console.log('props', this.props.library.categoryList)
+      if(this.props.user.token != null) {
+        this.getCategories(this.props.library.currentProduct.id, this.props.user.token)
       }
       else{ 
         this.navigation.navigate('LoginScreen')
-      }      
+      }   
     }
     getCategories(product_id, token) {
       APIService.getCategories(product_id, token)
@@ -55,7 +59,8 @@ import * as Progress from 'react-native-progress';
           let totalLessons = 0;     
           let progressValue = 0;   
           this.props.setCurrentCategory(this.state.categoryList[0])
-          for (let i = 0; i < this.state.categoryList.length; i++) {
+        for (let i = 0; i < this.props.library.categoryList.length; i++) {
+          // for (let i = 0; i < 2; i++) {
             progressValue  = i/this.state.categoryList.length;
             this.setState({progress: progressValue})
             await APIService.getLessons(this.state.categoryList[i].id, token)
@@ -68,8 +73,25 @@ import * as Progress from 'react-native-progress';
               console.log(err)
             })
           }
+          let currentLesson=this.props.library.lessonList[this.state.categoryList[0].id][0];
+          this.props.setCurrentLesson(currentLesson)
           this.setState({loading: false})
           this.props.registerTotalLessons(totalLessons)
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+    }
+    playVideo() {
+      APIService.getComments(this.props.library.currentLesson.id, this.props.user.token)
+        .then(res=>res.json())
+        .then(res=>{
+          this.props.setCurrentCategory(this.props.library.categoryList[0]);
+          if(res.data != undefined){
+          } else{
+            this.props.registerComments(res.data);
+          }
+          this.navigation.navigate('ViewLessonScreen');
         })
         .catch(err=>{
           console.log(err);
@@ -78,16 +100,26 @@ import * as Progress from 'react-native-progress';
 
     viewLesson(category_id, lesson) {
       this.props.setCurrentLesson(lesson);
-      for (let i = 0; i < this.props.library.categoryList.length; i++) {
-        if ( this.props.library.categoryList[i].id == category_id) {
-          this.props.setCurrentCategory(this.props.library.categoryList[i])
-          this.navigation.navigate('ViewLessonScreen')
-        }
-      }
+      APIService.getComments(lesson.id, this.props.user.token)
+        .then(res=>res.json())
+        .then(res=>{
+          console.log('reply', res)
+          this.props.registerComments(res.data)
+          for (let i = 0; i < this.props.library.categoryList.length; i++) {
+            if ( this.props.library.categoryList[i].id == category_id) {
+              this.props.setCurrentCategory(this.props.library.categoryList[i])
+              // this.navigation.navigate('ViewLessonScreen')
+            }
+          }
+        })
+        .catch(err=>{
+          console.log('error occured', err);
+        })
     }
     render() {
       let Categories = [];
       for (let i = 0; i < this.props.library.categoryList.length; i++) {
+      // for (let i = 0; i < 2; i++) {
         /**
          * push lessons
          */
@@ -103,10 +135,14 @@ import * as Progress from 'react-native-progress';
                     onPress={() => {this.viewLesson(category_id, this.props.library.lessonList[category_id][j])}}
                     >
                       <Left>
-                        <Thumbnail square source={require("../../assets/images/avatar.png")}  />
+                        {/* <View>
+                          <Image source = {{uri: this.props.library.lessonList[category_id][j].thumbnail}} />
+                        </View> */}
+                        <Thumbnail square source={{uri: this.props.library.lessonList[category_id][j].thumbnail}}  />
                       </Left>
-                      <Body>
-                        <Text style={{fontSize:16}}>{this.props.library.lessonList[category_id][j].title}</Text>                        
+                      <Body style={{flex:1, flexDirection:"row", alignItems:"center"}}>
+                        <Text style={{fontSize:16}}>{this.props.library.lessonList[category_id][j].title}</Text> 
+                        {this.props.library.lessonList[category_id][j].lessons_completed &&<Icon name="check"  size={30} color="#009900"/>}
                       </Body>
                       <Right>
                         <Text note numberOfLines={1} style={{color: "grey"}}>3:43</Text>
@@ -127,7 +163,7 @@ import * as Progress from 'react-native-progress';
               {/* <Separator bordered> */}
                 <View style={{height: 60, paddingHorizontal: 15, justifyContent: "space-between", alignItems: "center", borderBottomWidth: 1, borderBottomColor:"#bbbbbb", flex:1, flexDirection:"row", }}>
                   <Text style={styles.categoryTitleText}>{this.props.library.categoryList[i].name}</Text>
-                  <Icon name="chevron-right"  size={30} color="grey"/>
+                  <Icon name="chevron-right"  size={30} color="#00900"/>
                 </View>
               {/* </Separator> */}
             </CollapseHeader>
@@ -155,20 +191,20 @@ import * as Progress from 'react-native-progress';
         <Container style={styles.container}>
           <ScrollView>
             <View style={styles.selectedLessonLayout}>
-              <Image source={require("../../assets/images/background1.jpg")} style={{height: 250, width: null, flex: 1}}/>
+              <Image source={{uri:this.props.library.currentProduct.thumbnail}} style={{height: 250, width: null, flex: 1}}/>
               <View style={styles.lessonDescriptionLayout}>
-                {/* <TouchableOpacity                 
+                <TouchableOpacity                 
                   style={styles.lessonPlayButton}
-                  onPress={() => navigation.navigate('ViewLessonScreen')}
+                  onPress={() => this.playVideo()}
                   >
                     <Icon name='play-arrow' size={30} color="white"/>
-                </TouchableOpacity> */}
-                <Button   rounded              
+                </TouchableOpacity>
+                {/* <Button   rounded              
                   style={styles.lessonPlayButton}
-                  onPress={() => this.navigation.navigate('ViewLessonScreen')}
+                  onPress={() => this.playVideo()}
                   >
                     <Icon name='play-arrow' size={30} color="white"/>
-                </Button>
+                </Button> */}
                 <Text style={styles.lessonTitle}>
                   {this.props.library.currentProduct.title}
                 </Text>
@@ -188,12 +224,26 @@ import * as Progress from 'react-native-progress';
             {/* </View> */}
             {!this.state.loading && Categories}
             <View style={styles.biographyLayout}>
-              <Text style={styles.biographyTitle}>Description</Text>
-              <CardItem style={styles.biographyContextCard}>
-                <Text style={styles.biographyText}>
-                  {this.props.library.currentProduct.description}
-                </Text>
-              </CardItem>
+              <Text style={styles.biographyTitle}>Instructor</Text>
+              <View style={{margin: 10}}>
+                <Card>
+                  <CardItem style={{marginHorizontal:10}}>
+                    <Body style={styles.biographyContextCard} >
+                    <View
+                      style={{marginRight:10}}
+                      >
+                      <Thumbnail source={{uri:this.props.library.currentProduct.instructor.headshot}} style={styles.instructorThumbnail}/>
+                    </View>
+                    <View style={styles.instructorDscriptionPart}>
+                      <Text style={styles.instructorName}>{this.props.library.currentProduct.instructor.name}</Text>
+                      <Text style={styles.biographyText}>
+                        {this.props.library.currentProduct.instructor.description}
+                      </Text>
+                    </View>
+                    </Body>
+                  </CardItem>
+                </Card>
+              </View>
             </View>
            
           </ScrollView>
@@ -230,6 +280,7 @@ const styles = StyleSheet.create({
     right: 15,
     width: 60,
     height: 60,
+    borderRadius: 30,
   },
   lessonTitle: {
     color: "white",
@@ -257,13 +308,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#dddddd"
   },
   biographyContextCard: {
-    marginTop: 15,
-    marginBottom: 40,
-    marginHorizontal: 10,
+    flex: 1,
+    flexDirection: "row",
   },
   biographyTitle: {
     marginLeft: 10,
     marginTop: 10,
+    fontSize: 18,
   },
   biographyText: {
     color: "#5f5f5f",
@@ -273,6 +324,19 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     marginVertical: 10,
+  },
+  instructorThumbnail: {
+    width: 60,
+    height: 60,
+  },
+  instructorName: {
+    flex:1,
+    color: "#2577f2",
+    fontSize: 18,
+  },
+  instructorDscriptionPart: {
+    flex:1,
+    flexDirection: "column"
   }
 
 });
@@ -285,7 +349,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({registerCategories,registerLessons,registerTotalLessons,setCurrentCategory, setCurrentLesson}, dispatch);
+  return bindActionCreators({registerCategories,registerLessons,registerTotalLessons,setCurrentCategory, setCurrentLesson, registerComments}, dispatch);
 };
 export default connect(mapStateToProps, mapDispatchToProps)(CourseScreen);
 // export default CourseScreen;
