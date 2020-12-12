@@ -70,8 +70,6 @@ const VideoPlayer = (props) => {
   const onFullScreen = () => {
     setIsFullScreen(!isFullScreen);
     props.setFullScreen(isFullScreen)
-    if (isFullScreen == false) setScreenType('content');
-    else setScreenType('cover');
     console.log('full screen state', isFullScreen)
   };
 
@@ -94,7 +92,7 @@ const VideoPlayer = (props) => {
         ref={videoPlayer}
         resizeMode={screenType}
         onFullScreen={isFullScreen}
-        source={require('../assets/video/video.mp4')} 
+        source={{uri:'https://assets.mixkit.co/videos/download/mixkit-countryside-meadow-4075.mp4',}} 
         style={styles.mediaPlayer}
         volume={10}
       />
