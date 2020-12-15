@@ -28,7 +28,6 @@ class ViewLessonScreen extends Component{
   }
   componentDidMount() {
     this.setFullScreen();
-    console.log('comments data',this.props.library.comments)
   }
   setFullScreen(){
     if(this.props.library.fullscreen){
@@ -76,9 +75,24 @@ class ViewLessonScreen extends Component{
     return (
       <Container style={styles.container}>
           { !this.props.library.fullscreen &&
-            <Header style={styles.headerLayout}>
-              <Body>
-                <Title>Electric Guitar</Title>
+           <Header noShadow style={{backgroundColor: "#008fd6", height:40, borderBottomWidth:0,}}>
+            <Left>
+              <TouchableOpacity onPress={()=>{this.navigation.navigate('MyLibraryScreen')}}>
+                <Icon name='chevron-left' style={{color:"white"}} size={35} />
+              </TouchableOpacity>
+            </Left>
+           
+            <Right>
+              <TouchableOpacity >
+                <Icon name='search'  style={{color:"white"}} size={28} />
+              </TouchableOpacity>
+            </Right>
+          </Header>            
+          }
+          { !this.props.library.fullscreen &&
+            <Header noShadow style={styles.headerLayout}>
+              <Body style={{justifyContent:'center', alignItems: "center"}}>
+                <Title>{this.props.library.currentCategory.name}</Title>
               </Body>
             </Header>
           }
@@ -86,7 +100,8 @@ class ViewLessonScreen extends Component{
             <VideoPlayer />
           </View>
           {!this.props.library.fullscreen && 
-              <ScrollView>
+            <ScrollView>
+             
               <View style={styles.videoPlayerLayout}>
                 <View style={styles.descriptionLayout}>
                   <Text style={styles.descriptionTitle}>
@@ -95,9 +110,14 @@ class ViewLessonScreen extends Component{
                   <Text style={styles.descrptionContent}>
                     {this.props.library.currentLesson.body.substring(0,200)}
                   </Text>
-                  <Button full style={styles.markDownButton}>
-                    <Text style={styles.markDownTitle}>Mark as Done</Text>
-                  </Button>
+                  {!this.props.library.currentLesson.lessons_completed && <Button full style={styles.markDownButton}>
+                      <Text style={styles.markDownTitle}>Mark as Done</Text>
+                    </Button>
+                  }
+                  {this.props.library.currentLesson.lessons_completed  && 
+                  <Button full success >
+                    <Text style={styles.markDownTitle}>Completed</Text>
+                  </Button>}
                 </View>            
               </View>
               <View style={styles.downloadsLayout}>          
@@ -152,7 +172,7 @@ const styles = StyleSheet.create({
   },
   descrptionContent: {
     fontSize: 13,
-    marginTop: 10,
+    marginVertical:10,
     color: "#8f8f8f"
   },
   descriptionTitle: {
@@ -161,7 +181,6 @@ const styles = StyleSheet.create({
   },
   markDownButton: {
     marginTop: 30,
-    backgroundColor: "#0099ff",
     borderRadius: 5,
 
   },
@@ -227,7 +246,6 @@ const styles = StyleSheet.create({
     flex:1,
   },
   normalScreenView: {
-    marginVertical: 20, 
     backgroundColor:"#f2f2f2", 
     height: 250
   }

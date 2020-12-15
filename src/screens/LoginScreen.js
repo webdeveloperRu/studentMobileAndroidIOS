@@ -5,6 +5,7 @@ import {APIService} from '../service'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {loginUser} from '../redux/actions/userActions';
+import {clearAll} from '../redux/actions/libraryActions';
 import * as Progress from 'react-native-progress';
 class LoginScreen extends Component {
   constructor(props) {
@@ -30,7 +31,8 @@ class LoginScreen extends Component {
     .then(res=>{
       this.setState({logging: false})
       if (res.success == true) {
-        this.props.loginUser(res)
+        this.props.clearAll();
+        this.props.loginUser(res);
         this.navigation.replace('DrawerNavigationRoutes');
       }
       else {
@@ -198,7 +200,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({loginUser}, dispatch);
+  return bindActionCreators({loginUser, clearAll}, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

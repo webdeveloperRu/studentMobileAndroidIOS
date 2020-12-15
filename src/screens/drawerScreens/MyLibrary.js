@@ -45,9 +45,9 @@ class MyLibraryScreen extends Component {
     .then(res=>res.json())
       .then(res=>{
         this.setState({isLoading: false})
-        console.log('proudct list', res.data)
         this.state.productList = res.data
         this.props.registerProducts(this.state.productList)
+        this.props.setCurrentProduct(this.state.productList[0])
       })
       .catch(err=>{
         console.log(err);
@@ -71,7 +71,6 @@ class MyLibraryScreen extends Component {
                 source={{uri:productList[i].thumbnail}} 
                 // source={require("../../assets/images/background1.jpg")} 
                 style={styles.libraryCardBody}>
-                    <Icon name="play-circle-outline" size={40} style={styles.playIcon}  ></Icon>
               </ImageOverlay>
           </CardItem>
           </TouchableOpacity>

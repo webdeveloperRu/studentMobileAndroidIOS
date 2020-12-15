@@ -4,6 +4,7 @@
 // Import React and Component
 import React from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const NavigationDrawerHeader = (props) => {
   const toggleDrawer = () => {
@@ -13,13 +14,7 @@ const NavigationDrawerHeader = (props) => {
   return (
     <View style={{flexDirection: 'row'}}>
       <TouchableOpacity onPress={toggleDrawer}>
-        <Image
-          source={{
-            uri:
-              'https://raw.githubusercontent.com/AboutReact/sampleresource/master/drawerWhite.png',
-          }}
-          style={{width: 25, height: 25, marginLeft: 5}}
-        />
+      <Icon name='menu'  style={{color:"white", marginLeft:10}} size={28} />
       </TouchableOpacity>
     </View>
   );

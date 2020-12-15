@@ -2,7 +2,6 @@
 // Example of Splash, Login and Sign Up in React Native
 // https://aboutreact.com/react-native-login-and-signup/
 import 'react-native-gesture-handler';
-import { Root } from "native-base";
 // Import React and Component
 import React from 'react';
 
@@ -13,13 +12,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 // Import Screens
 import SplashScreen from './screens/SplashScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import DrawerNavigatorRoutes from './screens/DrawerNavigationRoutes';
+import LoginScreen from './screens/LoginScreen';
 import ViewLessonScreen from './screens/ViewLesson'
 import CourseScreen from './screens/drawerScreens/Course'
-import MyLibraryScreen from './screens/drawerScreens/MyLibrary'
-import SettingScreen from './screens/drawerScreens/SettingScreen'
-import DrawerNavigationRoutes from './screens/DrawerNavigationRoutes';
-import LoginScreen from './screens/LoginScreen'
-
 const Stack = createStackNavigator();
 
 const Auth = () => {
@@ -42,9 +38,10 @@ const Auth = () => {
 
 const App = () => {
   return (
-    <Root>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="SplashScreen">
+        <Stack.Navigator initialRouteName="SplashScreen"  
+          headerMode="none"
+          >
           {/* SplashScreen which will come once for 5 Seconds */}
           <Stack.Screen
             name="SplashScreen"
@@ -61,26 +58,21 @@ const App = () => {
           {/* Navigation Drawer as a landing page */}
           <Stack.Screen
             name="DrawerNavigationRoutes"
-            component={DrawerNavigationRoutes}
+            component={DrawerNavigatorRoutes}
 
             // Hiding header for Navigation Drawer
             options={{
               headerShown: false,
             }}
           />
-          <Stack.Screen
+           <Stack.Screen
             name="ViewLessonScreen"
             component={ViewLessonScreen}
+            options={{
+              headerShown: false,
+            }}
 
             // Hiding header for Navigation Drawer
-            options={{
-              headerShown: true,
-              title: "",
-              headerStyle: {
-                height: 40,
-                backgroundColor: "#008fd6",
-              },
-            }}
           />
           <Stack.Screen
             name="CourseScreen"
@@ -88,55 +80,21 @@ const App = () => {
 
             // Hiding header for Navigation Drawer
             options={{
-              headerShown: true,
-              title: "",
-              headerStyle: {
-                height: 40,
-                backgroundColor: "#008fd6",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="SettingScreen"
-            component={SettingScreen}
-
-            // Hiding header for Navigation Drawer
-            options={{
-              headerShown: true,
-              title: "",
-              headerStyle: {
-                height: 40,
-                backgroundColor: "#008fd6",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="MyLibraryScreen"
-            component={MyLibraryScreen}
-
-            // Hiding header for Navigation Drawer
-            options={{
-              headerShown: true,
-              title: "",
-              headerStyle: {
-                height: 40,
-                backgroundColor: "#008fd6",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-
-            // Hiding header for Navigation Drawer
-            options={{
+             
               headerShown: false,
+              headerTitleContainerStyle:{
+                color: "white"
+              },
               title: "",
+              headerTitleStyle: {color:'white'},
+              headerStyle: {
+                backgroundColor: "#0099ff",
+              },
+              headerTintColor: 'white',
             }}
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </Root>
   );
 };
 

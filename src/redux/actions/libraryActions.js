@@ -54,7 +54,6 @@ export const setFullScreen = (fullscreen) => {
     payload: fullscreen,
   };
 };
-
 export const clearAll = () => {
   return {
     type: ActionTypes.CLEAR_ALL,

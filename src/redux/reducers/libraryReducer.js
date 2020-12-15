@@ -55,6 +55,12 @@ export const libraryReducer = (state = initialState, action) => {
           ...state,
           currentLesson: currentLesson,
         };
+    case ActionTypes.SET_CURRENT_CATEGORY:
+      const currentCategory = action.payload;
+        return {
+          ...state,
+          currentCategory: currentCategory,
+        };
     case ActionTypes.REGISTER_COMMENTS:
       const comments = action.payload;
         return {

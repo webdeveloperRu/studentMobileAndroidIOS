@@ -41,11 +41,11 @@ const myLibraryScreenStack = ({navigation}) => {
               >
                 <Icon name="search" size={25} color="white"></Icon>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
               activeOpacity={0.7}
               >
                 <Icon name="more-vert" size={25} color="white"></Icon>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           ),
           headerStyle: {
@@ -64,7 +64,9 @@ const settingScreenStack = ({navigation}) => {
       initialRouteName="SettingsScreen"
       screenOptions={{
         headerLeft: () => (
-          <NavigationDrawerHeader navigationProps={navigation} />
+          <TouchableOpacity onPress={ ()=> navigation.navigate("MyLibraryScreen")} >
+            <Icon name="chevron-left"  size={40} color="white"/>
+          </TouchableOpacity>
         ),
         headerStyle: {
           backgroundColor: '#0099ff', //Set Header color
@@ -78,56 +80,12 @@ const settingScreenStack = ({navigation}) => {
         name="SettingsScreen"
         component={SettingsScreen}
         options={{
-          title: 'Settings', //Set Header Title
+          title: 'Back to my library', //Set Header Title
         }}
       />
     </Stack.Navigator>
   );
 };
-
-const courseScreenStack = ({navigation}) => {
-  return (
-    <Stack.Navigator
-      initialRouteName="CourseScreen"
-      screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerHeader navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: '#0099ff', //Set Header color
-        },
-        headerRight: () => (
-          <View style={styles.myLibraryHeaderRightMenu}>
-            <TouchableOpacity
-            activeOpacity={0.7}
-            style={{marginRight: 10,}}
-            >
-              <Icon name="search" size={25} color="white"></Icon>
-            </TouchableOpacity>
-            <TouchableOpacity
-            activeOpacity={0.7}
-            >
-              <Icon name="more-vert" size={25} color="white"></Icon>
-            </TouchableOpacity>
-          </View>
-        ),
-        headerTintColor: '#fff', //Set Header text color
-        headerTitleStyle: {
-          fontWeight: 'bold', //Set Header text style
-        },
-      }}>
-      <Stack.Screen
-        name="CourseScreen"
-        component={CourseScreen}
-        options={{
-          title: 'Course', //Set Header Title
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-
-
 
 const DrawerNavigatorRoutes = (props) => {
   return (
@@ -144,16 +102,6 @@ const DrawerNavigatorRoutes = (props) => {
         }}
         component={myLibraryScreenStack}
       />
-      <Drawer.Screen
-        name="courseScreenStack"
-        options={{
-          drawerLabel: 'Course',          
-          drawerIcon: () => (
-            <Icon name="menu-book" size={30} color="#0099ff"></Icon>
-          )
-        }}
-        component={courseScreenStack}
-      />
        <Drawer.Screen
         name="settingScreenStack"
         options={{
@@ -165,6 +113,7 @@ const DrawerNavigatorRoutes = (props) => {
         component={settingScreenStack}
       />
     </Drawer.Navigator>
+    
   );
 };
 const styles = StyleSheet.create({
