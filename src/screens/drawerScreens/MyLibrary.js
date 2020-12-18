@@ -21,6 +21,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ImageOverlay } from "../../components/image-overlay";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-tiny-toast';
+
 class MyLibraryScreen extends Component {
   constructor(props) {
     super(props);
@@ -51,6 +53,8 @@ class MyLibraryScreen extends Component {
       })
       .catch(err=>{
         console.log(err);
+        this.setState({isLoading: false})
+
       })
   }
   viewCategory=(product)=>{

@@ -30,7 +30,7 @@ import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react
 import { Bullets  }from "react-native-easy-content-loader"
 import { ImageOverlay } from "../../components/image-overlay";
 import * as Progress from 'react-native-progress';
-
+import DropDownMenu from '../../components/DropDownMenu'
 // import {bindActionCreators} from 'redux';
   class CourseScreen extends Component {
     constructor(props) {
@@ -60,7 +60,6 @@ import * as Progress from 'react-native-progress';
      
     }
    
-  
     getCategories(product_id, token) {
       APIService.getCategories(product_id, token)
         .then(res=>res.json())
@@ -98,21 +97,21 @@ import * as Progress from 'react-native-progress';
         })
 
     }
-    playVideo() {
-      APIService.getComments(this.props.library.currentLesson.id, this.props.user.token)
-        .then(res=>res.json())
-        .then(res=>{
-          this.props.setCurrentCategory(this.props.library.categoryList[0]);
-          if(res.data != undefined){
-          } else{
-            this.props.registerComments(res.data);
-          }
-          this.navigation.navigate('ViewLessonScreen');
-        })
-        .catch(err=>{
-          console.log(err);
-        })
-    }
+    // playVideo() {
+    //   APIService.getComments(this.props.library.currentLesson.id, this.props.user.token)
+    //     .then(res=>res.json())
+    //     .then(res=>{
+    //       this.props.setCurrentCategory(this.props.library.categoryList[0]);
+    //       if(res.data != undefined){
+    //       } else{
+    //         this.props.registerComments(res.data);
+    //       }
+    //       this.navigation.navigate('ViewLessonScreen');
+    //     })
+    //     .catch(err=>{
+    //       console.log(err);
+    //     })
+    // }
    
     viewLesson(category_id, lesson) {
       this.props.setCurrentLesson(lesson);
@@ -223,7 +222,6 @@ import * as Progress from 'react-native-progress';
           )
         }
       }
-      console.log('compoleted count', completedLessonsCount)
       this.setState({categories: categories})
       this.setState({completedLessonsCount: completedLessonsCount})
 
@@ -244,13 +242,17 @@ import * as Progress from 'react-native-progress';
                 <Icon name='chevron-left' style={{color:"white"}} size={35} />
               </TouchableOpacity>
             </Left>
-            <Body>
+            <Body >
               <Title>{this.props.library.currentProduct.title}</Title>
             </Body>
-            <Right>
-              <TouchableOpacity >
-                <Icon name='info-outline'  style={{color:"white"}} size={28} />
+            <Right style={{ alignItems:"flex-start"}}>
+              <TouchableOpacity 
+                style={{marginRight: 10,}}
+                >
+                <Icon name='search'  style={{color:"white"}} size={28} />
               </TouchableOpacity>
+            
+              <DropDownMenu navigation={this.navigation}></DropDownMenu>
             </Right>
           </Header>
           { this.state.loading && <Progress.Bar width={null} height={2} borderRadius = {0} progress={this.state.progress} color={'#6100e5'} borderWidth={0}/>

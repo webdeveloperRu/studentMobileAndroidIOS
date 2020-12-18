@@ -69,3 +69,87 @@ export const getComments = async (lesson_id, token) => {
     },
   })
 };
+
+export const saveProfile = async (user, token) => {
+  var FormData = require('form-data');
+
+  var formdata = new FormData();
+  let filename = "";
+  let file = null;
+  if(user.avatar !=null) { 
+    filename = user.avatar.path.replace(/^.*[\\\/]/, '')
+    file = {uri: user.avatar.path, type: 'multipart/form-data', name:filename };
+  }
+  formdata.append("email", user.email);
+  formdata.append("name", user.name);
+  formdata.append("time_zone", user.time_zone);
+  formdata.append("avatar", file);
+  return fetch(API_URL+'auth/settings', {
+    method: 'POST',
+    headers: {
+      'apikey': token
+    },
+    body: formdata,
+  })
+};
+
+
+export const removeAvatar = async (token) => {
+
+  return fetch(API_URL+'auth/settings/avatar', {
+    method: 'DELETE',
+    headers: {
+      'apikey': token
+    },
+  })
+};
+export const changePassword = async (password, token) => {
+  return fetch(API_URL+'auth/change-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', 
+      'apikey': token   
+    },
+    body: JSON.stringify({
+      current_password: password.current_password,
+      new_password: password.new_password,
+      verify_password: password.verify_password,
+    }),
+  })
+ };
+
+ export const forgotPassword = async (email) => {
+  return fetch(API_URL+'auth/forgot-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', 
+    },
+    body: JSON.stringify({
+     email: email
+    }),
+  })
+ };
+
+export const resetPassword = async(resetInformation)=> {
+  return fetch(API_URL+'auth/reset-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', 
+    },
+    body: JSON.stringify({
+     "email": resetInformation.email,
+     "newpassword": resetInformation.password,
+     "email-code": resetInformation.emailCode
+    }),
+  })
+}
+
+export const getSettings = async (token) => {
+  return fetch(API_URL+'auth/settings', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': token
+    },
+  })
+};

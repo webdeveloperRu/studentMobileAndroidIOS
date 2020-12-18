@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, Text,TouchableOpacity} from 'react-native';
-import { Container, Content, Button, Input, Item, Icon, Toast} from 'native-base';
+import { Container, Content, Button, Input, Item, Icon} from 'native-base';
 import {APIService} from '../service'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {loginUser} from '../redux/actions/userActions';
 import {clearAll} from '../redux/actions/libraryActions';
 import * as Progress from 'react-native-progress';
+import Toast from 'react-native-tiny-toast';
+import { ScrollView } from 'react-native-gesture-handler';
+
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -20,6 +23,7 @@ class LoginScreen extends Component {
     };
     this.navigation = props.navigation;
   }
+
   logIn = () => {
     let user ={
       email: this.state.email,
@@ -36,12 +40,17 @@ class LoginScreen extends Component {
         this.navigation.replace('DrawerNavigationRoutes');
       }
       else {
-        Toast.show({
-          text: res.message,
-          style: {
-            backgroundColor: "#ff5500"
-           }
+        Toast.show(res.message, {
+          // position: Toast.position.center,
+          position: 0,
+          containerStyle:{            
+            padding: 20,
+          },
+          textStyle: {
+            fontSize: 18,
+          },
         })
+        
       } 
     })
     .catch(err=>{
@@ -49,6 +58,9 @@ class LoginScreen extends Component {
       console.log(err)
     })
   };
+  forgotPassword=()=> {
+    this.navigation.navigate('ForgotPasswordScreen')
+  }
   setShowPassword=()=> {
     if(this.state.showPassword) {
       this.setState({showPassword: false})
@@ -60,6 +72,7 @@ class LoginScreen extends Component {
   render(){
     return (
       <Container >
+        <ScrollView>
         <Content style={styles.container}>
           <View style={styles.signUpLayout}>
             <Text style={styles.questionText}>Don't have a account?</Text>
@@ -104,8 +117,14 @@ class LoginScreen extends Component {
                   >
                   {!this.state.showPassword && <Icon type="FontAwesome" name="eye" style={{fontSize: 20, color: 'black'}}  />}
                   {this.state.showPassword && <Icon type="FontAwesome" name="eye" style={{fontSize: 20, color: '#bbbbbb'}} />}
-                </TouchableOpacity>
+                </TouchableOpacity>                
             </Item>
+            <TouchableOpacity 
+              onPress={this.forgotPassword}
+              >
+                <Text style={styles.forgotPassword}> Forgot Password?</Text>
+                
+              </TouchableOpacity>
             <Button 
               info
               full
@@ -116,7 +135,7 @@ class LoginScreen extends Component {
             </Button>
           </View>        
         </Content>
-        
+        </ScrollView>
       </Container>
     );
   }
@@ -191,11 +210,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  forgotPassword: {
+    color: "#0099ff",
+    fontSize: 16,
+    alignSelf : "flex-end",
+    marginTop: 10,
+  }
 
 });
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    library: state.library,
   };
 };
 

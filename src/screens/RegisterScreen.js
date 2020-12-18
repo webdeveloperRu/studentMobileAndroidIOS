@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, Text,TouchableOpacity} from 'react-native';
-import { Container, Content, Button, Input, Item, Icon, Toast} from 'native-base';
+import { Container, Content, Button, Input, Item, Icon} from 'native-base';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {registerUser} from '../redux/actions/userActions';
 import {APIService} from '../service'
 import * as Progress from 'react-native-progress';
+import Toast from 'react-native-tiny-toast';
+
 class RegisterScreen extends Component {
   constructor(props) {
     super(props);
@@ -37,21 +39,30 @@ class RegisterScreen extends Component {
     APIService.registerUser(user)
       .then(res=>res.json())
       .then(res=>{
+        console.log(res)
         this.setState({registering:false})
-        if( res.email == ""){
-          Toast.show({
-            text: res.message,
-            style: {
-              backgroundColor: "#ff5500"
-             }
+        console.log(res.email)
+        if( res.email != undefined){
+          this.props.registerUser(res)          
+          this.navigation.navigate('LoginScreen');
+          Toast.showSuccess('User successfully registered!',
+          {
+            containerStyle: {
+              backgroundColor: "rgba(0, 120, 0, 0.8)"
+            }
           })
         }
         else {
-          this.props.registerUser(res)          
-          this.navigation.navigate('LoginScreen');
-          Toast.show({
-            text: 'User register success!',
-            type: 'success'
+          Toast.show(res.message, {
+            // position: Toast.position.center,
+            position: 0,
+            containerStyle:{  
+              padding:30,          
+            },
+            textStyle: {
+              fontSize: 18,
+            },
+            mask: true,
           })
           
         }

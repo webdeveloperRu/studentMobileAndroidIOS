@@ -22,18 +22,21 @@ import {store} from '../redux/store';
 import * as userActions from '../redux/actions/userActions';
 import * as libraryActions from '../redux/actions/libraryActions';
 const CustomSidebarMenu = (props) => {
+  const state = store.getState();
+
   return (
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
         <List>
           <ListItem avatar>
             <Left>
-              <Thumbnail source={require("../assets/images/profile.jpg")}  />
+            {state.user.data!=null && state.user.data.avatar !=null &&<Thumbnail source={{uri: state.user.data.avatar}}  />}
+            {state.user.data!=null && state.user.data.avatar ==null &&<Thumbnail source={require('../assets/images/profile.png')}  />}
             </Left>
           </ListItem>
         </List>
         <Text style={stylesSidebar.profileHeaderText}>
-          AboutReact
+          {state.user.data.name}
         </Text>
       </View>
       <DrawerContentScrollView {...props} >
@@ -41,7 +44,7 @@ const CustomSidebarMenu = (props) => {
           labelStyle={{color: '#0099ff',}}
           itemStyle={stylesSidebar.sideMenuItem}
         />
-        <DrawerItem
+        {/* <DrawerItem
           label={({color}) => 
           <View style={{flex:1, flexDirection: "row"}}>
             <Icon name="logout" size={30} color="#0099ff" style={{marginRight: 30}}></Icon>
@@ -75,7 +78,7 @@ const CustomSidebarMenu = (props) => {
               {cancelable: false},
             );
           }}
-        />
+        /> */}
       </DrawerContentScrollView>
     </View>
   );

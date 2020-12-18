@@ -15,6 +15,7 @@ import SettingsScreen from './drawerScreens/SettingScreen';
 import CustomSidebarMenu from '../components/CustomSidebarMenu';
 import NavigationDrawerHeader from '../components//NavigationDrawerHeader';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import DropDownMenu from '../components/DropDownMenu'
 import { 
   TouchableOpacity , 
   View,
@@ -41,11 +42,7 @@ const myLibraryScreenStack = ({navigation}) => {
               >
                 <Icon name="search" size={25} color="white"></Icon>
               </TouchableOpacity>
-              {/* <TouchableOpacity
-              activeOpacity={0.7}
-              >
-                <Icon name="more-vert" size={25} color="white"></Icon>
-              </TouchableOpacity> */}
+              <DropDownMenu navigation={navigation}></DropDownMenu>
             </View>
           ),
           headerStyle: {
@@ -58,13 +55,13 @@ const myLibraryScreenStack = ({navigation}) => {
   );
 };
 
-const settingScreenStack = ({navigation}) => {
+const settingScreenStack = ({navigation:{ goBack }}) => {
   return (
     <Stack.Navigator
       initialRouteName="SettingsScreen"
       screenOptions={{
         headerLeft: () => (
-          <TouchableOpacity onPress={ ()=> navigation.navigate("MyLibraryScreen")} >
+          <TouchableOpacity onPress={ ()=>goBack()} >
             <Icon name="chevron-left"  size={40} color="white"/>
           </TouchableOpacity>
         ),

@@ -14,6 +14,8 @@ import SplashScreen from './screens/SplashScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import DrawerNavigatorRoutes from './screens/DrawerNavigationRoutes';
 import LoginScreen from './screens/LoginScreen';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import ViewLessonScreen from './screens/ViewLesson'
 import CourseScreen from './screens/drawerScreens/Course'
 const Stack = createStackNavigator();
@@ -30,6 +32,16 @@ const Auth = () => {
       <Stack.Screen
         name="RegisterScreen"
         component={RegisterScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ForgotPasswordScreen"
+        component={ForgotPasswordScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ResetPasswordScreen"
+        component={ResetPasswordScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

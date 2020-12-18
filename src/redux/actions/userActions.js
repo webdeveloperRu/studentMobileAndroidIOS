@@ -27,3 +27,10 @@ export const logOut = () => {
     type: ActionTypes.LOG_OUT,
   };
 };
+
+export const registerEmailCode = (emailCode)=> {
+  return{
+    type: ActionTypes.REGISTER_EMAILCODE,
+    payload: emailCode
+  }
+}

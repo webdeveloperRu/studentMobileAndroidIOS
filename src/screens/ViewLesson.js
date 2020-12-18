@@ -18,6 +18,7 @@ import VideoPlayer from '../components/VideoPlayer1'
 // import Video from 'react-native-af-video-player'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
+import DropDownMenu from '../components/DropDownMenu'
 class ViewLessonScreen extends Component{
   constructor(props) {
     super(props);
@@ -76,16 +77,17 @@ class ViewLessonScreen extends Component{
       <Container style={styles.container}>
           { !this.props.library.fullscreen &&
            <Header noShadow style={{backgroundColor: "#008fd6", height:40, borderBottomWidth:0,}}>
-            <Left>
-              <TouchableOpacity onPress={()=>{this.navigation.navigate('MyLibraryScreen')}}>
+            <Left >
+              <TouchableOpacity onPress={()=>{this.navigation.navigate('CourseScreen')}}>
                 <Icon name='chevron-left' style={{color:"white"}} size={35} />
               </TouchableOpacity>
             </Left>
            
             <Right>
-              <TouchableOpacity >
+              {/* <TouchableOpacity  style={{marginRight: 10}}>
                 <Icon name='search'  style={{color:"white"}} size={28} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+              <DropDownMenu navigation={this.navigation}></DropDownMenu>
             </Right>
           </Header>            
           }

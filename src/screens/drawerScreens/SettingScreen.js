@@ -6,6 +6,7 @@ import React,{Component}  from 'react';
 import {View, Text, SafeAreaView,StyleSheet, TouchableOpacity} from 'react-native';
 import {
   Container,
+  Content,
   Button, 
   Body, 
   Header, 
@@ -20,13 +21,15 @@ import {
   Tab,
   Tabs,
   ScrollableTab,
-  TabHeading 
+  TabHeading,
   } from 'native-base';
   import {connect} from 'react-redux';
   import timezone from '../../data/timezone';
   import Icon from 'react-native-vector-icons/Feather';
   import DropDownPicker from 'react-native-dropdown-picker';
-  
+  import {APIService} from '../../service';
+  import Toast from 'react-native-tiny-toast';
+  import ImagePicker from 'react-native-image-crop-picker';
 class SettingsScreen extends Component {
   constructor(props) {
     super(props);
@@ -40,8 +43,8 @@ class SettingsScreen extends Component {
       confirmPassword: "",
       selectedTimezone: "",
       timezone: [],
-    
-      
+      avatar: null,
+      avatar_url: "",
     };
     this.navigation = props.navigation;   
     this.controller; 
@@ -49,12 +52,84 @@ class SettingsScreen extends Component {
   }  
  
   componentDidMount() {
-    
-    this.setState({fullname: this.props.user.data.name, email: this.props.user.data.email, timezone: timezone.time_zones, selectedTimezone: this.props.user.data.time_zone})
+    this.setState({fullname: this.props.user.data.name, email: this.props.user.data.email, timezone: timezone.time_zones,selectedTimezone: this.props.user.data.time_zone, avatar_url: this.props.user.data.avatar})
+  }
+  changePassword=()=>{
+    let password={
+      current_password: this.state.currentPassword,
+      new_password: this.state.newPassword,
+      verify_password: this.state.confirmPassword,
+    }
+    APIService.changePassword(password, this.props.user.token)
+    .then( res=>res.json())
+    .then(res=>{
+      if(res.success==true) {
+        Toast.showSuccess('Password successfully changed!', 
+        {
+          containerStyle: {
+            backgroundColor: "rgba(0, 120, 0, 0.8)"
+          }
+        })
+      } else{
+        Toast.show(res.message, {
+          // position: Toast.position.center,
+          position: 0,
+          containerStyle:{            
+            backgroundColor: "rgba(255, 52, 0, 0.8)",
+            width: "60%",
+            height: 80,
+          },
+          textStyle: {
+            color: "white",
+            fontSize: 18,
+          },
+          mask: true,
+        })
+      }
+    })
+
+  }
+  selectAvatar=()=>{
+    ImagePicker.openPicker({
+      width: 100,
+      height: 100,
+      cropping: true
+    }).then(image => {
+      this.setState({avatar: image})
+      this.setState({avatar_url: image.path})
+    });
+  }
+
+  removeAvatar=()=>{
+    APIService.removeAvatar(this.props.user.token)
+    .then(res=>res.json())
+    .then(res=>{
+      console.log(res);
+    })
+  }
+  saveProfile=()=> {
+    let user={
+      email: this.state.email,
+      name: this.state.fullname,
+      time_zone: this.state.selectedTimezone,
+      avatar: this.state.avatar,
+    }
+    APIService.saveProfile(user, this.props.user.token)
+    .then(res=>res.json())
+    .then(res=>{
+      Toast.showSuccess('Profile successfully updated!', 
+      {
+        containerStyle: {
+          backgroundColor: "rgba(0, 120, 0, 0.8)"
+        }
+      })
+    })
   }
   render() {
+    const userImage = this.state.avatar_url == null? require('../../assets/images/profile.png'): {uri: this.state.avatar_url}
     return (
-      <Container style={styles.container}>        
+      <Container style={styles.container}> 
+      <Content>
        <Tabs renderTabBar={()=> <ScrollableTab />} tabBarBackgroundColor= 'white' tabBarUnderlineStyle={{ backgroundColor: '#0099ff' }}>
         <Tab heading="Profile Setting" tabStyle={{backgroundColor: 'white'}} textStyle={{color: 'grey'}} activeTabStyle={{backgroundColor: 'white'}} activeTextStyle={{color: '#0099ff', fontWeight: 'normal'}}>
           <Text style={styles.profileText}>Profile Settings</Text>
@@ -106,21 +181,22 @@ class SettingsScreen extends Component {
             />
             <Text style={styles.avatarText}> Avatar</Text>
             <View style={styles.avatarContainer}>
-              {/* <Thumbnail source={{uri:this.props.user.avatar}} style={styles.avatarThumbnail}/> */}
-              <Thumbnail source={require('../../assets/images/profile.jpg')} style={styles.avatarThumbnail}/>
+            <Thumbnail source={userImage} style={styles.avatarThumbnail}/>
+              {/* {this.getAvatar() !=-1 && this.getAvatar() ==null && <Thumbnail source={require('../../assets/images/profile.png')} style={styles.avatarThumbnail}/>}
+              {this.getAvatar() !=-1 && this.getAvatar() !=null && <Thumbnail source={{uri: this.state.avatar_url}} style={styles.avatarThumbnail}/>} */}
               <View style={styles.selectAvatarForm}>
                 <Text style={styles.recommendAvatarText}>Recommended dimensions of 100 × 100</Text>
-                <TouchableOpacity >
+                <TouchableOpacity  onPress={this.selectAvatar}>
                   <View style={styles.selectAvatarButton}>
                     <Text style={{color: "blue"}}>Select Image</Text>
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.removeAvatarButton}>
+                <TouchableOpacity  style={styles.removeAvatarButton} onPress={this.removeAvatar}>
                   <Text style={{color:"red"}}>Remove Image</Text>
                 </TouchableOpacity>
               </View>
             </View>
-            <Button style={styles.saveProfilebutton}>
+            <Button style={styles.saveProfilebutton} onPress={this.saveProfile} >
               <Text style={{fontSize:16, color:"white"}}>Save</Text>
             </Button>
           </View>
@@ -167,12 +243,13 @@ class SettingsScreen extends Component {
                 value={this.state.confirmPassword}
               />
             </Item>
-            <Button style={styles.changePasswordButton}>
+            <Button style={styles.changePasswordButton} onPress={this.changePassword}>
               <Text style={{fontSize:16, color:"white"}}>Change Password</Text>
             </Button>
          </View>
         </Tab>
       </Tabs>
+      </Content>       
     </Container>
     );
   }

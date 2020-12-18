@@ -1,8 +1,9 @@
 import * as ActionTypes from '../actions/types';
 
 const initialState = {
-  user: null,
+  data: null,
   token: null,
+  emailCode: "sdfsdf"
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -27,6 +28,12 @@ export const userReducer = (state = initialState, action) => {
           data: loginUser.data,
           token: loginUser.token,
         };
+    case ActionTypes.REGISTER_EMAILCODE:
+      const emailCode = action.payload;
+      return {
+        ...state,
+        emailCode: emailCode
+      };
           
     default:
       return state;
