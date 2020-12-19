@@ -34,3 +34,18 @@ export const registerEmailCode = (emailCode)=> {
     payload: emailCode
   }
 }
+
+export const setLoginUserEmail = (loginUserEmail) => {
+  return {
+    type: ActionTypes.SET_LOGINUSEREMAIL,
+    payload: loginUserEmail,
+  };
+};
+
+
+export const setLoginUserPassword = (loginUserPassword) => {
+  return {
+    type: ActionTypes.SET_LOGINUSERPASSWORD,
+    payload: loginUserPassword,
+  };
+};

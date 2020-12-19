@@ -18,6 +18,7 @@ import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import ViewLessonScreen from './screens/ViewLesson'
 import CourseScreen from './screens/drawerScreens/Course'
+import TwoFactorAuthScreen from './screens/TwoFactorAuthScreen'
 const Stack = createStackNavigator();
 
 const Auth = () => {
@@ -42,6 +43,11 @@ const Auth = () => {
       <Stack.Screen
         name="ResetPasswordScreen"
         component={ResetPasswordScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TwoFactorAuthScreen"
+        component={TwoFactorAuthScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

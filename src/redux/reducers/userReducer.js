@@ -3,7 +3,9 @@ import * as ActionTypes from '../actions/types';
 const initialState = {
   data: null,
   token: null,
-  emailCode: "sdfsdf"
+  emailCode: "",
+  loginUserEmail: '',
+  loginUserPassword: ''
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -33,6 +35,18 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         emailCode: emailCode
+      };
+    case ActionTypes.SET_LOGINUSEREMAIL:
+      const loginUserEmail = action.payload;
+      return {
+        ...state,
+        loginUserEmail: loginUserEmail
+      };
+    case ActionTypes.SET_LOGINUSERPASSWORD:
+      const loginUserPassword = action.payload;
+      return {
+        ...state,
+        loginUserPassword: loginUserPassword
       };
           
     default:

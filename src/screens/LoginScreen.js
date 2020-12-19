@@ -4,7 +4,7 @@ import { Container, Content, Button, Input, Item, Icon} from 'native-base';
 import {APIService} from '../service'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {loginUser} from '../redux/actions/userActions';
+import {loginUser, setLoginUserEmail,setLoginUserPassword} from '../redux/actions/userActions';
 import {clearAll} from '../redux/actions/libraryActions';
 import * as Progress from 'react-native-progress';
 import Toast from 'react-native-tiny-toast';
@@ -40,17 +40,24 @@ class LoginScreen extends Component {
         this.navigation.replace('DrawerNavigationRoutes');
       }
       else {
-        Toast.show(res.message, {
-          // position: Toast.position.center,
-          position: 0,
-          containerStyle:{            
-            padding: 20,
-          },
-          textStyle: {
-            fontSize: 18,
-          },
-        })
-        
+        if(res.message == 'otp code is requested')
+        {
+          this.props.setLoginUserEmail(this.state.email);
+          this.props.setLoginUserPassword(this.state.password);
+          this.navigation.replace('TwoFactorAuthScreen')
+        } else{
+          Toast.show(res.message, {
+            // position: Toast.position.center,
+            position: 0,
+            containerStyle:{            
+              padding: 20,
+            },
+            textStyle: {
+              fontSize: 18,
+            },
+          })
+
+        }
       } 
     })
     .catch(err=>{
@@ -226,7 +233,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({loginUser, clearAll}, dispatch);
+  return bindActionCreators({loginUser, clearAll,setLoginUserEmail,setLoginUserPassword}, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

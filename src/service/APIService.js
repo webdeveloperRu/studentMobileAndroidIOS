@@ -153,3 +153,36 @@ export const getSettings = async (token) => {
     },
   })
 };
+
+
+export const getTwofaKey = async (token) => {
+  return fetch(API_URL+'auth/twofa', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': token
+    },
+  })
+};
+
+export const setTwofaKey = async (otpCode,token) => {
+  return fetch(API_URL+'auth/twofa', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': token
+    },
+    body: JSON.stringify({
+      otp: otpCode
+    })
+  })
+};
+
+export const disableTwoFaKey = async (otpCode, token) => {
+  return fetch(API_URL+'auth/twofa?otp='+otpCode, {
+    method: 'DELETE',
+    headers: {
+      'apikey': token
+    },
+  })
+};

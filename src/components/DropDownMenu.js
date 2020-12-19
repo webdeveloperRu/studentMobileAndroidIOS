@@ -21,7 +21,6 @@ class DropdownMenu extends Component {
 
   gotoSettings = (navigation) => {
     this._menu.hide();
-    console.log(navigation)
     navigation.navigate('settingScreenStack')
   };
 
