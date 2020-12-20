@@ -343,7 +343,6 @@ class SettingsScreen extends Component {
     const userImage = this.state.avatar_url == null? require('../../assets/images/profile.png'): {uri: this.state.avatar_url}
     return (
       <Container style={styles.container}> 
-      <Content>
        <Tabs renderTabBar={()=> <ScrollableTab />} tabBarBackgroundColor= 'white' tabBarUnderlineStyle={{ backgroundColor: '#0099ff' }}>
         <Tab heading="Profile Setting" tabStyle={{backgroundColor: 'white'}} textStyle={{color: 'grey'}} activeTabStyle={{backgroundColor: 'white'}} activeTextStyle={{color: '#0099ff', fontWeight: 'normal'}}>
           <Text style={styles.profileText}>Profile Settings</Text>
@@ -511,7 +510,7 @@ class SettingsScreen extends Component {
               <Text style={styles.firstStepTitle}>Enter the 6 numbers displayed in the Authenticator App in the boxes below.</Text>
             </View>
            
-            <View style={{marginVertical:10, marginHorizontal: 20,flexDirection: "row"}}>
+            <View style={{marginVertical:10, marginHorizontal:20,flexDirection: "row", justifyContent:"space-between"}}>
               <TextInput
                 style={styles.inputOtpCode}
                 value={this.state.otpCode1}
@@ -605,11 +604,8 @@ class SettingsScreen extends Component {
               </TouchableOpacity>
               </View>
           </ScrollView>
-            
         </Tab>
-
       </Tabs>
-      </Content>       
     </Container>
     );
   }
@@ -772,8 +768,8 @@ const styles = StyleSheet.create({
   inputOtpCode: {
     fontSize: 20,
     borderColor: "grey",
-    width: 50,
-    height: 50,
+    width: '13%',
+    aspectRatio: 1,
     borderWidth:1,
     marginHorizontal: 5,
     textAlign: "center"

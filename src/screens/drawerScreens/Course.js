@@ -30,7 +30,9 @@ import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react
 import { Bullets  }from "react-native-easy-content-loader"
 import { ImageOverlay } from "../../components/image-overlay";
 import * as Progress from 'react-native-progress';
-import DropDownMenu from '../../components/DropDownMenu'
+import DropDownMenu from '../../components/DropDownMenu';
+import Toast from 'react-native-tiny-toast';
+
 // import {bindActionCreators} from 'redux';
   class CourseScreen extends Component {
     constructor(props) {
@@ -118,7 +120,21 @@ import DropDownMenu from '../../components/DropDownMenu'
       APIService.getComments(lesson.id, this.props.user.token)
         .then(res=>res.json())
         .then(res=>{
-          this.props.registerComments(res.data)
+          if (res.message !=undefined) {
+            Toast.show('Get Comments for this lesson:' + res.message, {
+              // position: Toast.position.center,
+              containerStyle:{            
+                marginHorizontal: 10,
+                padding: 20
+              },
+              textStyle: {
+                fontSize: 14,
+              },
+            })
+          }
+          if (res.data !=undefined) {
+            this.props.registerComments(res.data)            
+          }
           for (let i = 0; i < this.props.library.categoryList.length; i++) {
             if ( this.props.library.categoryList[i].id == category_id) {
               this.props.setCurrentCategory(this.props.library.categoryList[i])

@@ -169,7 +169,7 @@ class TwoFactorAuthScreen extends Component {
           <View style={styles.inputOtpLayout}>
             <Text style={{marginTop: 20, marginLeft: 10, fontSize: 25,}}> Two Factor Authentication</Text>
             <Text style={{marginTop: 20, marginLeft: 10, fontSize: 18, paddingHorizontal:10}}> Please enter the 2fa code from your mobile device below.</Text>
-            <View style={{ marginHorizontal: 20,flexDirection: "row"}}>
+            <View style={{ marginHorizontal: 20,flexDirection: "row", justifyContent: 'space-between'}}>
               <TextInput
                 style={styles.inputOtpCode}
                 value={this.state.otpCode1}
@@ -286,8 +286,8 @@ const styles = StyleSheet.create({
     marginTop:70,
     fontSize: 20,
     borderColor: "#00aaff",
-    width: 50,
-    height: 50,
+    width: '13%',
+    aspectRatio: 1,
     borderWidth:1,
     marginHorizontal: 3,
     textAlign: "center"
