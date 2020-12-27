@@ -182,34 +182,37 @@ export const disableTwoFaKey = async (otpCode, token) => {
 };
 
 export const markAsDone = async (param, lesson_id, token) => {
-  return fetch(API_URL+'student/' + lesson_id + '/mark-as-complete/' + param, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': token
+  return fetch(
+    API_URL + 'student/' + lesson_id + '/mark-as-complete/' + param,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: token,
+      },
     },
-  })
-}
+  );
+};
 
 export const addComment = async (comment, lesson_id, token) => {
-  return fetch(API_URL+'student/' + lesson_id + '/comments', {
+  return fetch(API_URL + 'student/' + lesson_id + '/comments', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'apikey': token
+      apikey: token,
     },
     body: JSON.stringify({
-      comment: comment
-    })
-  })
-}
+      comment: comment,
+    }),
+  });
+};
 
 export const getDownloadFiles = async (lesson_id, token) => {
-  return fetch(API_URL+'student/' + lesson_id + '/files', {
+  return fetch(API_URL + 'student/' + lesson_id + '/files', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'apikey': token
-    }
-  })
-}
+      apikey: token,
+    },
+  });
+};
