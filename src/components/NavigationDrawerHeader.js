@@ -1,9 +1,5 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React and Component
 import React from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const NavigationDrawerHeader = (props) => {
@@ -12,11 +8,21 @@ const NavigationDrawerHeader = (props) => {
   };
 
   return (
-    <View style={{flexDirection: 'row'}}>
+    <View style={styles.container}>
       <TouchableOpacity onPress={toggleDrawer}>
-      <Icon name='menu'  style={{color:"white", marginLeft:10}} size={28} />
+        <Icon name="menu" style={styles.navigationDrawerMenuItem} size={28} />
       </TouchableOpacity>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+  },
+  navigationDrawerMenuItem: {
+    color: 'white',
+    marginLeft: 10,
+  },
+});
+
 export default NavigationDrawerHeader;

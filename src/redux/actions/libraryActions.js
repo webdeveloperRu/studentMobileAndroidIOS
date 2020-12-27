@@ -15,13 +15,13 @@ export const registerCategories = (categoies) => {
 export const registerLessons = (lessons, category_id) => {
   return {
     type: ActionTypes.REGISTER_LESSONS,
-    payload: {lessons,category_id}
+    payload: {lessons, category_id},
   };
 };
 export const registerTotalLessons = (totalLessons) => {
   return {
     type: ActionTypes.REGISTER_TOTAL_LESSONS,
-    payload: totalLessons
+    payload: totalLessons,
   };
 };
 export const setCurrentProduct = (product) => {

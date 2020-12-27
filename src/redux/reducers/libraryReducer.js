@@ -18,7 +18,7 @@ export const libraryReducer = (state = initialState, action) => {
       const products = action.payload;
       return {
         ...state,
-       productList: products,
+        productList: products,
       };
 
     case ActionTypes.REGISTER_CATEGORIES:
@@ -32,47 +32,47 @@ export const libraryReducer = (state = initialState, action) => {
       const product = action.payload;
       return {
         ...state,
-        currentProduct: product
+        currentProduct: product,
       };
 
     case ActionTypes.REGISTER_LESSONS:
-        const  {lessons,category_id} = action.payload;
-        state.lessonList[category_id] = lessons
-        return {
-          ...state,
-          lessonList: state.lessonList,
-        };
+      const {lessons, category_id} = action.payload;
+      state.lessonList[category_id] = lessons;
+      return {
+        ...state,
+        lessonList: state.lessonList,
+      };
     case ActionTypes.REGISTER_TOTAL_LESSONS:
-      const  totalLessons = action.payload;
-        state.lessonList[category_id] = lessons
-        return {
-          ...state,
-          totalLessons: totalLessons,
-        };
+      const totalLessons = action.payload;
+      state.lessonList[category_id] = lessons;
+      return {
+        ...state,
+        totalLessons: totalLessons,
+      };
     case ActionTypes.SET_CURRENT_LESSON:
       const currentLesson = action.payload;
-        return {
-          ...state,
-          currentLesson: currentLesson,
-        };
+      return {
+        ...state,
+        currentLesson: currentLesson,
+      };
     case ActionTypes.SET_CURRENT_CATEGORY:
       const currentCategory = action.payload;
-        return {
-          ...state,
-          currentCategory: currentCategory,
-        };
+      return {
+        ...state,
+        currentCategory: currentCategory,
+      };
     case ActionTypes.REGISTER_COMMENTS:
       const comments = action.payload;
-        return {
-          ...state,
-          comments: comments,
-        };    
+      return {
+        ...state,
+        comments: comments,
+      };
     case ActionTypes.SET_FULLSCREEN:
       const fullscreen = action.payload;
-        return {
-          ...state,
-          fullscreen: fullscreen,
-        };    
+      return {
+        ...state,
+        fullscreen: fullscreen,
+      };
     case ActionTypes.CLEAR_ALL:
       return {
         ...state,
@@ -84,7 +84,7 @@ export const libraryReducer = (state = initialState, action) => {
         currentCategory: [],
         comments: [],
         totalLessons: 0,
-        fullscreen: false
+        fullscreen: false,
       };
 
     default:

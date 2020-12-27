@@ -1,11 +1,4 @@
 import * as ActionTypes from './types';
-export const registerToken = (token) => {
-  return {
-    type: ActionTypes.REGISTER_TOKEN,
-    payload: token,
-  };
-};
-
 export const registerUser = (userInfo) => {
   return {
     type: ActionTypes.REGISTER_USER,
@@ -20,20 +13,18 @@ export const loginUser = (userInfo) => {
   };
 };
 
-
-
 export const logOut = () => {
   return {
     type: ActionTypes.LOG_OUT,
   };
 };
 
-export const registerEmailCode = (emailCode)=> {
-  return{
+export const registerEmailCode = (emailCode) => {
+  return {
     type: ActionTypes.REGISTER_EMAILCODE,
-    payload: emailCode
-  }
-}
+    payload: emailCode,
+  };
+};
 
 export const setLoginUserEmail = (loginUserEmail) => {
   return {
@@ -41,7 +32,6 @@ export const setLoginUserEmail = (loginUserEmail) => {
     payload: loginUserEmail,
   };
 };
-
 
 export const setLoginUserPassword = (loginUserPassword) => {
   return {

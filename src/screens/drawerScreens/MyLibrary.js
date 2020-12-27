@@ -1,27 +1,14 @@
-import React,{Component} from 'react';
-import { StyleSheet, Text, View, Image,TouchableOpacity} from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
-import {APIService} from '../../service'
+import {APIService} from '../../service';
 import {bindActionCreators} from 'redux';
 import {registerProducts} from '../../redux/actions/libraryActions';
-import {setCurrentProduct} from '../../redux/actions/libraryActions'
-import {
-  Container,
-  Button, 
-  Body, 
-  Header, 
-  Left,
-  Right,
-  Title,
-  Thumbnail,
-  Card,
-  CardItem,
-  } from 'native-base';
-import { ScrollView } from 'react-native-gesture-handler';
-import { ImageOverlay } from "../../components/image-overlay";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import {setCurrentProduct} from '../../redux/actions/libraryActions';
+import {Container, Body, Thumbnail, Card, CardItem} from 'native-base';
+import {ScrollView} from 'react-native-gesture-handler';
+import {ImageOverlay} from '../../components/image-overlay';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Toast from 'react-native-tiny-toast';
 
 class MyLibraryScreen extends Component {
   constructor(props) {
@@ -31,99 +18,91 @@ class MyLibraryScreen extends Component {
       isLoading: false,
     };
     this.navigation = props.navigation;
-    
   }
   componentDidMount() {
-    if(this.props.user.token != null) {
-      this.getMyProducts()
-    }
-    else{ 
-      this.navigation.navigate('LoginScreen')
+    if (this.props.user.token != null) {
+      this.getMyProducts();
+    } else {
+      this.navigation.navigate('LoginScreen');
     }
   }
   getMyProducts = () => {
-    this.setState({isLoading: true})
+    this.setState({isLoading: true});
     APIService.getMyProducts(this.props.user.token)
-    .then(res=>res.json())
-      .then(res=>{
-        this.setState({isLoading: false})
-        this.state.productList = res.data
-        this.props.registerProducts(this.state.productList)
-        this.props.setCurrentProduct(this.state.productList[0])
+      .then((res) => res.json())
+      .then((res) => {
+        this.setState({isLoading: false});
+        this.state.productList = res.data;
+        this.props.registerProducts(this.state.productList);
+        this.props.setCurrentProduct(this.state.productList[0]);
       })
-      .catch(err=>{
+      .catch((err) => {
         console.log(err);
-        this.setState({isLoading: false})
-
-      })
-  }
-  viewCategory=(product)=>{
-    this.props.setCurrentProduct(product)
-    this.navigation.navigate('CourseScreen')
-  }
+        this.setState({isLoading: false});
+      });
+  };
+  viewCategory = (product) => {
+    this.props.setCurrentProduct(product);
+    this.navigation.navigate('CourseScreen');
+  };
   render() {
-    let products = []
-    let productList = this.props.library.productList
-    for(let i = 0; i <productList.length; i++){
+    let products = [];
+    let productList = this.props.library.productList;
+    for (let i = 0; i < productList.length; i++) {
       products.push(
         <Card style={styles.libraryCard} key={i}>
-           <TouchableOpacity 
-              onPress={() => this.viewCategory(productList[i])}
-              >
+          <TouchableOpacity onPress={() => this.viewCategory(productList[i])}>
             <CardItem cardBody>
               <ImageOverlay
-                source={{uri:productList[i].thumbnail}} 
-                // source={require("../../assets/images/background1.jpg")} 
-                style={styles.libraryCardBody}>
-              </ImageOverlay>
-          </CardItem>
+                source={{uri: productList[i].thumbnail}}
+                style={styles.libraryCardBody}
+              />
+            </CardItem>
           </TouchableOpacity>
           <CardItem>
             <Body style={styles.libraryCardDescription}>
               <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.libraryCardDescriptionButton}
-              >
-                <Thumbnail source={{uri:productList[i].instructor.headshot}} style={styles.libraryCardInstructorThumbnail}/>
+                activeOpacity={0.7}
+                style={styles.libraryCardDescriptionButton}>
+                <Thumbnail
+                  source={{uri: productList[i].instructor.headshot}}
+                  style={styles.libraryCardInstructorThumbnail}
+                />
               </TouchableOpacity>
               <View style={styles.descriptionPart}>
                 <Text style={styles.descriptionTitle}>
                   {productList[i].description.substring(0, 200)}...
                 </Text>
-                <Text style={styles.productTitle}>
-                  {productList[i].title}
-                </Text>
+                <Text style={styles.productTitle}>{productList[i].title}</Text>
               </View>
             </Body>
           </CardItem>
-        </Card>
-      )
+        </Card>,
+      );
     }
     return (
-      <Container style={styles.container}>        
+      <Container style={styles.container}>
         <Spinner
-            visible={this.state.isLoading}
-            textContent={'Loading...'}
-            textStyle={styles.spinnerTextStyle}
-          />
-            <ScrollView >           
-              {products}
-            </ScrollView>
-        </Container>
+          visible={this.state.isLoading}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+        <ScrollView>{products}</ScrollView>
+      </Container>
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   headerLayout: {
-    backgroundColor: "#0099ff"
+    backgroundColor: '#0099ff',
   },
   headerTitle: {
     fontSize: 20,
-    color: "white"
+    color: 'white',
   },
   libraryCard: {
     marginLeft: 10,
@@ -132,20 +111,20 @@ const styles = StyleSheet.create({
   },
   libraryCardDescription: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
     // alignItems: "center",
-    borderTopColor: "black",
+    borderTopColor: 'black',
   },
   descriptionPart: {
     flex: 1,
-    flexDirection: "column"
+    flexDirection: 'column',
   },
   descriptionTitle: {
     fontSize: 16,
   },
   productTitle: {
     fontSize: 18,
-    color: "#999999"
+    color: '#999999',
   },
   libraryCardDescriptionButton: {
     marginRight: 10,
@@ -155,39 +134,37 @@ const styles = StyleSheet.create({
     height: 45,
   },
   libraryCardBody: {
-    height: 200, 
-    width: null, 
+    height: 200,
+    width: null,
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   playButton: {
-    alignSelf: "center",
+    alignSelf: 'center',
     width: 50,
     height: 50,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   playIcon: {
-    color: "white",
+    color: 'white',
     fontSize: 50,
   },
   spinnerTextStyle: {
-    color: '#FFF'
+    color: '#FFF',
   },
-
-
 });
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    library: state.library
+    library: state.library,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({registerProducts,setCurrentProduct}, dispatch);
+  return bindActionCreators({registerProducts, setCurrentProduct}, dispatch);
 };
 export default connect(mapStateToProps, mapDispatchToProps)(MyLibraryScreen);
 // export default MyLibraryScreen;

@@ -3,15 +3,14 @@
 
 import React, {useState, useRef} from 'react';
 
-import { StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 import Video from 'react-native-video';
 import {setFullScreen} from '../redux/actions/libraryActions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import MediaControls, {PLAYER_STATES}
-from 'react-native-media-controls';
+import MediaControls, {PLAYER_STATES} from 'react-native-media-controls';
 
 const VideoPlayer = (props) => {
   // const video = require('../assets/video/video.mov');
@@ -21,9 +20,7 @@ const VideoPlayer = (props) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [paused, setPaused] = useState(false);
-  const [
-    playerState, setPlayerState
-  ] = useState(PLAYER_STATES.PLAYING);
+  const [playerState, setPlayerState] = useState(PLAYER_STATES.PLAYING);
   const [screenType, setScreenType] = useState('cover');
 
   const onSeek = (seek) => {
@@ -55,21 +52,13 @@ const VideoPlayer = (props) => {
     setIsLoading(false);
   };
 
-  const onLoadStart = (data) => setIsLoading(true);
+  const onLoadStart = () => setIsLoading(true);
 
   const onEnd = () => setPlayerState(PLAYER_STATES.ENDED);
 
-  const onError = () => alert('Oh! ', error);
-
-  const exitFullScreen = () => {
-    alert('Exit full screen');
-  };
-
-  const enterFullScreen = () => {};
-
   const onFullScreen = () => {
     setIsFullScreen(!isFullScreen);
-    props.setFullScreen(isFullScreen)
+    props.setFullScreen(isFullScreen);
   };
 
   const renderToolbar = () => (
@@ -91,8 +80,11 @@ const VideoPlayer = (props) => {
         ref={videoPlayer}
         resizeMode={screenType}
         onFullScreen={isFullScreen}
-        source={{uri:'https://assets.mixkit.co/videos/download/mixkit-countryside-meadow-4075.mp4',}} 
-        // source={require('../assets/video/video.mp4')} 
+        source={{
+          uri:
+            'https://assets.mixkit.co/videos/download/mixkit-countryside-meadow-4075.mp4',
+        }}
+        // source={require('../assets/video/video.mp4')}
         style={styles.mediaPlayer}
         volume={10}
       />
@@ -113,18 +105,18 @@ const VideoPlayer = (props) => {
   );
 };
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({setFullScreen}, dispatch);  
+  return bindActionCreators({setFullScreen}, dispatch);
 };
-export default connect(null,mapDispatchToProps)(VideoPlayer);
+export default connect(null, mapDispatchToProps)(VideoPlayer);
 
 // export default VideoPlayer;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent:"center"
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   toolbar: {
     marginTop: 30,

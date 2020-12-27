@@ -10,16 +10,12 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 // Import Screens
 import MyLibraryScreen from './drawerScreens/MyLibrary';
-import CourseScreen from './drawerScreens/Course';
 import SettingsScreen from './drawerScreens/SettingScreen';
 import CustomSidebarMenu from '../components/CustomSidebarMenu';
-import NavigationDrawerHeader from '../components//NavigationDrawerHeader';
+import NavigationDrawerHeader from '../components/NavigationDrawerHeader';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import DropDownMenu from '../components/DropDownMenu'
-import { 
-  TouchableOpacity , 
-  View,
-  StyleSheet } from 'react-native'
+import DropDownMenu from '../components/DropDownMenu';
+import {TouchableOpacity, View, StyleSheet} from 'react-native';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -37,12 +33,11 @@ const myLibraryScreenStack = ({navigation}) => {
           headerRight: () => (
             <View style={styles.myLibraryHeaderRightMenu}>
               <TouchableOpacity
-              activeOpacity={0.7}
-              style={{marginRight: 10,}}
-              >
-                <Icon name="search" size={25} color="white"></Icon>
+                activeOpacity={0.7}
+                style={styles.navbarSearchButton}>
+                <Icon name="search" size={25} color="white" />
               </TouchableOpacity>
-              <DropDownMenu navigation={navigation}></DropDownMenu>
+              <DropDownMenu navigation={navigation} />
             </View>
           ),
           headerStyle: {
@@ -55,22 +50,22 @@ const myLibraryScreenStack = ({navigation}) => {
   );
 };
 
-const settingScreenStack = ({navigation:{ goBack }}) => {
+const settingScreenStack = ({navigation: {goBack}}) => {
   return (
     <Stack.Navigator
       initialRouteName="SettingsScreen"
       screenOptions={{
         headerLeft: () => (
-          <TouchableOpacity onPress={ ()=>goBack()} >
-            <Icon name="chevron-left"  size={40} color="white"/>
+          <TouchableOpacity onPress={() => goBack()}>
+            <Icon name="chevron-left" size={40} color="white" />
           </TouchableOpacity>
         ),
         headerStyle: {
-          backgroundColor: '#0099ff', //Set Header color
+          backgroundColor: '#0099ff',
         },
-        headerTintColor: '#fff', //Set Header text color
+        headerTintColor: '#fff',
         headerTitleStyle: {
-          fontWeight: 'bold', //Set Header text style
+          fontWeight: 'bold',
         },
       }}>
       <Stack.Screen
@@ -84,7 +79,7 @@ const settingScreenStack = ({navigation:{ goBack }}) => {
   );
 };
 
-const DrawerNavigatorRoutes = (props) => {
+const DrawerNavigatorRoutes = () => {
   return (
     <Drawer.Navigator
       screenOptions={{headerShown: false}}
@@ -93,36 +88,31 @@ const DrawerNavigatorRoutes = (props) => {
         name="myLibraryScreenStack"
         options={{
           drawerLabel: 'My Library',
-          drawerIcon: () => (
-            <Icon name="turned-in" size={30} color="#0099ff"></Icon>
-          )
+          drawerIcon: () => <Icon name="turned-in" size={30} color="#0099ff" />,
         }}
         component={myLibraryScreenStack}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         name="settingScreenStack"
         options={{
           drawerLabel: 'Settings',
-          drawerIcon: () => (
-            <Icon name="settings" size={30} color="#0099ff"></Icon>
-          )
+          drawerIcon: () => <Icon name="settings" size={30} color="#0099ff" />,
         }}
         component={settingScreenStack}
       />
     </Drawer.Navigator>
-    
   );
 };
 const styles = StyleSheet.create({
   myLibraryHeaderRightMenu: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginRight: 10,
-
-  }
-  
+  },
+  navbarSearchButton: {
+    marginRight: 10,
+  },
 });
-
 
 export default DrawerNavigatorRoutes;
