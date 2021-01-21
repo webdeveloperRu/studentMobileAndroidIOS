@@ -26,9 +26,51 @@ export const registerUser = async (user) => {
     }),
   });
 };
+// --------------------------------- demo api ---------------------
+
+// export const getMyProducts = async (token) => {
+//   return fetch(API_URL + 'student/my-products?demo', {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       apikey: token,
+//     },
+//   });
+// };
+
+// export const getCategories = async (product_id, token) => {
+//   return fetch(API_URL + 'student/' + product_id + '/categories?demo', {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       apikey: token,
+//     },
+//   });
+// };
+// export const getLessons = async (category_id, token) => {
+//   return fetch(API_URL + 'student/' + category_id + '/lessons?demo', {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       apikey: token,
+//     },
+//   });
+// };
+
+// export const getComments = async (lesson_id, token) => {
+//   return fetch(API_URL + 'student/' + lesson_id + '/comments?demo', {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       apikey: token,
+//     },
+//   });
+// };
+
+//  ---------------------------------        real api ------------------------------------
 
 export const getMyProducts = async (token) => {
-  return fetch(API_URL + 'student/my-products?demo', {
+  return fetch(API_URL + 'student/my-products', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -38,7 +80,7 @@ export const getMyProducts = async (token) => {
 };
 
 export const getCategories = async (product_id, token) => {
-  return fetch(API_URL + 'student/' + product_id + '/categories?demo', {
+  return fetch(API_URL + 'student/' + product_id + '/categories', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -48,7 +90,7 @@ export const getCategories = async (product_id, token) => {
 };
 
 export const getLessons = async (category_id, token) => {
-  return fetch(API_URL + 'student/' + category_id + '/lessons?demo', {
+  return fetch(API_URL + 'student/' + category_id + '/lessons', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -58,7 +100,7 @@ export const getLessons = async (category_id, token) => {
 };
 
 export const getComments = async (lesson_id, token) => {
-  return fetch(API_URL + 'student/' + lesson_id + '/comments?demo', {
+  return fetch(API_URL + 'student/' + lesson_id + '/comments', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
